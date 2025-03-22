@@ -1,0 +1,17 @@
+main.
+a.
+10.
+10.
+esc.
+des.
+sum.
+pas.
+[a_inserir].
+pas.
+[a_inserir,a_capgirar].
+opcioinventada.
+pas.
+[a_inserir,a_capgirar,a_intercalar].
+pase.
+[a_inserir,a_capgirar,a_intercalar].
+sor.

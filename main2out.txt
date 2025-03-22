@@ -1,0 +1,97 @@
+Llista manual (m) o aleatoria (a) ? 
+Entra la mida de la llista: 
+Entra la llavor: 
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+2,5,3,0,1,4
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+6
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+14
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+Entra llista accions: 
+Solucio trobada amb 3 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+Entra llista accions: 
+Solucio trobada amb 5 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+Entra llista accions: 
+Solucio trobada amb 3 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+pas.                     
+Entra llista accions: 
+Solucio trobada amb 3 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+pas.                                
+Entra llista accions: 
+[a_intercalar,a_capgirar].          
+Solucio trobada amb 3 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+Entra llista accions: 
+Llista original: [2,5,3,0,1,4]
+[(2,5,3),0,1,4] ==  Intercalar  ==> [0,(2),1,(5),4,(3)]
+[0,(2,1),5,4,3] ==  Capgirar  ==> [0,(1,2),5,4,3]
+[0,1,2,(5,4,3)] ==  Capgirar  ==> [0,1,2,(3,4,5)]
+Llista ordenada: [0,1,2,3,4,5]
+Solucio trobada amb 3 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+yes

@@ -1,0 +1,12 @@
+main.
+m.
+esc.
+des.
+sum.
+pas.
+[a_inserir].
+pas.
+[a_capgirar].
+pase.
+[a_capgirar].
+sor.

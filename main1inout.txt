@@ -1,0 +1,112 @@
+main.
+Llista manual (m) o aleatoria (a) ? a.
+Entra la mida de la llista: 
+10.
+Entra la llavor: 
+10.
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+esc.
+0,6,3,4,5,7,9,8,2,1
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+des.
+9
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+sum.
+28
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+pas.
+Entra llista accions: 
+[a_inserir].
+Solucio trobada amb 4 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+pas.
+Entra llista accions: 
+[a_inserir,a_capgirar].
+Solucio trobada amb 4 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+pas.                   
+Entra llista accions: 
+[a_capgirar].          
+Solucio trobada amb 5 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+opcioinventada.
+Opcio incorrecta
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+pas.
+Entra llista accions: 
+[a_inserir,a_capgirar,a_intercalar].
+Solucio trobada amb 4 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+pase.
+Entra llista accions: 
+[a_inserir,a_capgirar,a_intercalar].
+Llista original: [0,6,3,4,5,7,9,8,2,1]
+[0,6,(3,4,5),7,9,8,2,1] == Inserir ==> [0,(3,4,5),6,7,9,8,2,1]
+[0,3,4,5,6,7,9,(8),2,1] == Inserir ==> [0,3,4,5,6,7,(8),9,2,1]
+[0,3,4,5,6,7,8,9,(2),1] == Inserir ==> [0,(2),3,4,5,6,7,8,9,1]
+[0,2,3,4,5,6,7,8,9,(1)] == Inserir ==> [0,(1),2,3,4,5,6,7,8,9]
+Llista ordenada: [0,1,2,3,4,5,6,7,8,9]
+Solucio trobada amb 4 passos
+Entrar opcio:
+- Escriure llista: esc
+- Calcular desordre amb nombre de desubicats: des
+- Calcular desordre amb suma de desplacaments: sum
+- Calcular desordre amb nombre minim de passos: pas
+- Calcular desordre amb nombre minim de passos i escriure passos: pase
+- Sortir: sor
+sor.
+yes
