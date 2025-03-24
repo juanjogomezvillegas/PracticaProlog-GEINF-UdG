@@ -49,11 +49,27 @@ generar_llista(L) :-
 	read(R),
     llista_aleatoria(N,R,L).
 
+%nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Itera sobre la llista L per a calcular el nombre de desubicats
+nombre_desubicats_i([], _, Count, Count).
+nombre_desubicats_i([X|Xs], Pos, Count, Des) :-
+    X =\= Pos,
+    Count1 is Count + 1,
+    Pos1 is Pos + 1,
+    nombre_desubicats_i(Xs, Pos1, Count1, Des).
+nombre_desubicats_i([X|Xs], Pos, Count, Des) :-
+    X == Pos,
+    Pos1 is Pos + 1,
+    nombre_desubicats_i(Xs, Pos1, Count, Des).
+
+
 % PROGRAMA PRINCIPAL
+
+%nombre_desubicats(+L,?Des) ==> Des serà el nombre de desubicats de la llista L
+nombre_desubicats(L, Des) :- nombre_desubicats_i(L, 0, 0, Des).
 
 %executarOperacio(+X,?L) :- X és una opció implementada, alguns valors de X (algunes opcions) fan servir la llista L, alguns no
 executarOperacio(esc,L) :- escriure_llista(L),!.
-executarOperacio(des,L) :- print(L),!.
+executarOperacio(des,L) :- nombre_desubicats(L, Des), print(Des),nl,!.
 executarOperacio(sum,L) :- print(L),!.
 executarOperacio(pas,L) :- print(L),!.
 executarOperacio(pase,L) :- print(L),!.
