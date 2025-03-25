@@ -80,10 +80,25 @@ nombre_desubicats(L,Des) :- nombre_desubicats_i(L,0,0,Des).
 %suma_desplacaments(+L,?Sum) ==> Sum és la suma de diferencies (en valor absolut) entre la posicio que ocupa un nombre a L i la posicio que hauria d'ocupar
 suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
+%a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
+
+%a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
+
+%a_intercalar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
+
+%ordenacio_minima(+L,+Accions,?L2,?Pas,−LlistaPassos) ==> L2 es la llista L ordenada.
+%               S'ha ordenat amb una sequencia d'aplicacions de les accions dins de la llista Accions, que pot ser qualsevol subconjunt de {a_inserir, a_capgirar, a_intercalar}. El nombre de passos de la sequencia es el minim possible.
+%               Pas es el nombre passos aplicats (metrica pas) LlistaPassos conte la llista de passos aplicats, per ordre.
+%               El predicat ordenacio minima es demostra una sola vegada
+
+%escriure_passos(+L) ==> escriu tots els passos de la llista L
+
+%escriure_pas(+Pas) ==> escriu el pas Pas, que es algun dels vistos en les accions inserir, capgirar i intercalar
+
 % PROGRAMA PRINCIPAL
 
 %executarOperacio(+X,?L) :- X és una opció implementada, alguns valors de X (algunes opcions) fan servir la llista L, alguns no
-executarOperacio(esc,L) :- escriure_llista(L),nl,!.
+executarOperacio(esc,L) :- write(L),nl,!.
 executarOperacio(des,L) :- nombre_desubicats(L,Des),print(Des),nl,!.
 executarOperacio(sum,L) :- suma_desplacaments(L,Sum),print(Sum),nl,!.
 executarOperacio(pas,L) :- print(L),!.
