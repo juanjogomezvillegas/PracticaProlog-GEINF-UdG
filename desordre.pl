@@ -53,7 +53,7 @@ generar_llista(L) :-
 nombre_desubicats_i([],_,Count,Count). % Aquí és on es fa l'assignació Des=Count
 nombre_desubicats_i([X|Xs],Pos,Count,Des) :- % Cas si l'element X esta desubicat a la llista L, si X != Pos
     X =\= Pos,
-    Count1 is Count + 1,
+    Count1 is Count + 1, % s'incrementa el Count de nombres desubicats
     Pos1 is Pos + 1,
     nombre_desubicats_i(Xs,Pos1,Count1,Des).
 nombre_desubicats_i([X|Xs],Pos,Count,Des) :- % Cas si l'element X esta ben ubicat a la llista L, si X == Pos
@@ -61,18 +61,31 @@ nombre_desubicats_i([X|Xs],Pos,Count,Des) :- % Cas si l'element X esta ben ubica
     Pos1 is Pos + 1,
     nombre_desubicats_i(Xs,Pos1,Count,Des).
 
+%suma_desplacaments_i(+L,+Pos,+Acum,?Sum) ==> Per cada element de la llista L, fem lleugerament diferent que nombre_desubicats_i, amb la diferencia de que ara calculem la diferencia entre cada element i Pos i l'acumulem a Acum
+suma_desplacaments_i([],_,Acum,Acum). % Aquí és on es fa l'assignació Sum=Acum
+suma_desplacaments_i([X|Xs],Pos,Acum,Sum) :- % Cas si l'element X esta desubicat a la llista L, si X != Pos
+    X =\= Pos, 
+    Diff is abs(X - Pos), 
+    Acum1 is Acum + Diff, 
+    Pos1 is Pos + 1, 
+    suma_desplacaments_i(Xs,Pos1,Acum1,Sum).
+suma_desplacaments_i([X|Xs],Pos,Acum,Sum) :- % Cas si l'element X esta ben ubicat a la llista L, si X == Pos
+    X == Pos, 
+    Pos1 is Pos + 1, 
+    suma_desplacaments_i(Xs,Pos1,Acum,Sum).
+
 %nombre_desubicats(+L,?Des) ==> Des és el nombre d'elements desubicats que no es troben a la posició correcte de la llista L
-nombre_desubicats(L, Des) :- nombre_desubicats_i(L,0,0,Des).
+nombre_desubicats(L,Des) :- nombre_desubicats_i(L,0,0,Des).
 
 %suma_desplacaments(+L,?Sum) ==> Sum és la suma de diferencies (en valor absolut) entre la posicio que ocupa un nombre a L i la posicio que hauria d'ocupar
-suma_desplacaments([],_) :- fail.
+suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
 % PROGRAMA PRINCIPAL
 
 %executarOperacio(+X,?L) :- X és una opció implementada, alguns valors de X (algunes opcions) fan servir la llista L, alguns no
-executarOperacio(esc,L) :- escriure_llista(L),!.
+executarOperacio(esc,L) :- escriure_llista(L),nl,!.
 executarOperacio(des,L) :- nombre_desubicats(L,Des),print(Des),nl,!.
-executarOperacio(sum,L) :- print(L),!.
+executarOperacio(sum,L) :- suma_desplacaments(L,Sum),print(Sum),nl,!.
 executarOperacio(pas,L) :- print(L),!.
 executarOperacio(pase,L) :- print(L),!.
 executarOperacio(sor,_) :- !.
