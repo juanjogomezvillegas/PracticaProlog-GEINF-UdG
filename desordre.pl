@@ -49,27 +49,29 @@ generar_llista(L) :-
 	read(R),
     llista_aleatoria(N,R,L).
 
-%nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Itera sobre la llista L per a calcular el nombre de desubicats
-nombre_desubicats_i([], _, Count, Count).
-nombre_desubicats_i([X|Xs], Pos, Count, Des) :-
+%nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Per cada element de la llista L, Pos correspon a la posició que hauria d'ocupar, i Count és el comptador de nombres desubicats
+nombre_desubicats_i([],_,Count,Count). % Aquí és on es fa l'assignació Des=Count
+nombre_desubicats_i([X|Xs],Pos,Count,Des) :- % Cas si l'element X esta desubicat a la llista L, si X != Pos
     X =\= Pos,
     Count1 is Count + 1,
     Pos1 is Pos + 1,
-    nombre_desubicats_i(Xs, Pos1, Count1, Des).
-nombre_desubicats_i([X|Xs], Pos, Count, Des) :-
+    nombre_desubicats_i(Xs,Pos1,Count1,Des).
+nombre_desubicats_i([X|Xs],Pos,Count,Des) :- % Cas si l'element X esta ben ubicat a la llista L, si X == Pos
     X == Pos,
     Pos1 is Pos + 1,
-    nombre_desubicats_i(Xs, Pos1, Count, Des).
+    nombre_desubicats_i(Xs,Pos1,Count,Des).
 
+%nombre_desubicats(+L,?Des) ==> Des és el nombre d'elements desubicats que no es troben a la posició correcte de la llista L
+nombre_desubicats(L, Des) :- nombre_desubicats_i(L,0,0,Des).
+
+%suma_desplacaments(+L,?Sum) ==> Sum és la suma de diferencies (en valor absolut) entre la posicio que ocupa un nombre a L i la posicio que hauria d'ocupar
+suma_desplacaments([],_) :- fail.
 
 % PROGRAMA PRINCIPAL
 
-%nombre_desubicats(+L,?Des) ==> Des serà el nombre de desubicats de la llista L
-nombre_desubicats(L, Des) :- nombre_desubicats_i(L, 0, 0, Des).
-
 %executarOperacio(+X,?L) :- X és una opció implementada, alguns valors de X (algunes opcions) fan servir la llista L, alguns no
 executarOperacio(esc,L) :- escriure_llista(L),!.
-executarOperacio(des,L) :- nombre_desubicats(L, Des), print(Des),nl,!.
+executarOperacio(des,L) :- nombre_desubicats(L,Des),print(Des),nl,!.
 executarOperacio(sum,L) :- print(L),!.
 executarOperacio(pas,L) :- print(L),!.
 executarOperacio(pase,L) :- print(L),!.
