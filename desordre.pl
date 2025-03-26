@@ -49,6 +49,14 @@ generar_llista(L) :-
 	read(R),
     llista_aleatoria(N,R,L).
 
+%preguntar_accio ==> Pregunta a l'usuari quines accions vol realitzar. Si l'acció és vàlida (Res és un paràmetre de sortida).
+preguntar_accio(Res) :-
+    print('Entra llista accions: '),nl,
+    read(Accions),
+    member(Accion, Accions),
+    member(Accion, [a_inserir, a_capgirar, a_intercalar]),
+    Res = Accions.
+
 %nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Per cada element de la llista L, Pos correspon a la posició que hauria d'ocupar, i Count és el comptador de nombres desubicats
 nombre_desubicats_i([],_,Count,Count). % Aquí és on es fa l'assignació Des=Count
 nombre_desubicats_i([X|Xs],Pos,Count,Des) :- % Cas si l'element X esta desubicat a la llista L, si X != Pos
