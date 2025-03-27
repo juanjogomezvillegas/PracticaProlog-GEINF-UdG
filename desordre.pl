@@ -6,6 +6,7 @@
 constant_m_rand(65537).
 constant_a_rand(75).
 constant_c_rand(74).
+accions_disp(X) :- X = [a_inserir, a_capgirar, a_intercalar].
 
 % PREDICATS JA IMPLEMENTATS PEL PROFESSOR
 
@@ -49,12 +50,13 @@ generar_llista(L) :-
 	read(R),
     llista_aleatoria(N,R,L).
 
-%preguntar_accio ==> Pregunta a l'usuari quines accions vol realitzar. Si l'acció és vàlida (Res és un paràmetre de sortida).
+%preguntar_accio(-Res) ==> Res la llista d'accions que l'usuari vol realitzar
 preguntar_accio(Res) :-
+    accions_disp(X),
     print('Entra llista accions: '),nl,
     read(Accions),
-    member(Accion, Accions),
-    member(Accion, [a_inserir, a_capgirar, a_intercalar]),
+    member(Accio, Accions),
+    member(Accio, X),
     Res = Accions.
 
 %nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Per cada element de la llista L, Pos correspon a la posició que hauria d'ocupar, i Count és el comptador de nombres desubicats
@@ -109,10 +111,10 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 executarOperacio(esc,L) :- write(L),nl,!.
 executarOperacio(des,L) :- nombre_desubicats(L,Des),print(Des),nl,!.
 executarOperacio(sum,L) :- suma_desplacaments(L,Sum),print(Sum),nl,!.
-executarOperacio(pas,L) :- print(L),!.
-executarOperacio(pase,L) :- print(L),!.
-executarOperacio(sor,_) :- !.
-executarOperacio(_,_) :- print('opcio incorrecte'),nl.
+executarOperacio(pas,L) :- preguntar_accio(Accions),print(Accions),print(L),nl,!.
+executarOperacio(pase,L) :- preguntar_accio(Accions),print(Accions),print(L),nl,!.
+executarOperacio(sor,_) :- nl,!.
+executarOperacio(_,_) :- nl,print('opcio incorrecte'),nl.
 
 %main2(+L) ==> L és la llista amb la que treballarem
 main2(L) :- repeat,
