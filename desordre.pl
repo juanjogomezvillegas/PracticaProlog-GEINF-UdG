@@ -37,8 +37,8 @@ llista_aleatoria_(N,Llista,[X|RestaPermutats],Llavor):-
 
 % PREDICATS PROPIS
 
-%escriure_llista(-L) ==> L serà la llista que demanarem (L és un paràmetre de sortida)
-escriure_llista(L) :-
+%llegir_llista(-L) ==> L serà la llista que demanarem (L és un paràmetre de sortida)
+llegir_llista(L) :-
     print('Entra la llista: '),nl,
 	read(L).
 
@@ -58,6 +58,10 @@ preguntar_accio(Res) :-
     member(Accio, Accions),
     member(Accio, X),
     Res = Accions.
+
+%escriure_llista(+L) ==> L és la llista que s'escriurà per pantalla
+escriure_llista([X]) :- format('%d',[X]),!.
+escriure_llista([X|L]) :- L\=[],format('%d,',[X]),escriure_llista(L).
 
 %nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Per cada element de la llista L, Pos correspon a la posició que hauria d'ocupar, i Count és el comptador de nombres desubicats
 nombre_desubicats_i([],_,Count,Count). % Aquí és on es fa l'assignació Des=Count
@@ -108,7 +112,7 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 % PROGRAMA PRINCIPAL
 
 %executarOperacio(+X,?L) :- X és una opció implementada, alguns valors de X (algunes opcions) fan servir la llista L, alguns no
-executarOperacio(esc,L) :- write(L),nl,!.
+executarOperacio(esc,L) :- escriure_llista(L),nl,!.
 executarOperacio(des,L) :- nombre_desubicats(L,Des),print(Des),nl,!.
 executarOperacio(sum,L) :- suma_desplacaments(L,Sum),print(Sum),nl,!.
 executarOperacio(pas,L) :- preguntar_accio(Accions),print(Accions),print(L),nl,!.
@@ -135,7 +139,7 @@ main1(a) :-
 	generar_llista(L),nl,
     main2(L),!.
 main1(m) :- 
-	escriure_llista(L),nl,
+	llegir_llista(L),nl,
     main2(L),!.
 main1(_) :- print('opcio incorrecte'),nl.
 
