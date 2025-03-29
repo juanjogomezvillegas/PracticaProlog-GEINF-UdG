@@ -58,7 +58,7 @@ concatenar([],L,L).
 concatenar([X|A],B,[X|C]) :- concatenar(A,B,C).
 
 %ordenada(+L)
-%ordenada(L) ==> L és una llista de nombres ordenada de menor a major
+%ordenada(+L) ==> L és una llista de nombres ordenada de menor a major
 ordenada([]).
 ordenada([_]).
 ordenada([X,Y|L]) :- X=<Y,ordenada([Y|L]).

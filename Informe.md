@@ -4,17 +4,19 @@
 
 ## Parts implementades
 
-- El menú principal (predicat **main**) funciona correctament, i també funciona el predicat **escriure_llista** per escriure la llista amb la que treballarem, i el predicat **generar_llista** per generar de forma aleatòria la llista amb la que treballarem, *fent servir el predicat **llista_aleatoria**, donat pel professor*.
+- El menú principal (predicat **main**) funciona correctament, i també funciona el predicat **llegir_llista** per llegir la llista amb la que treballarem, i el predicat **generar_llista** per generar de forma aleatòria la llista amb la que treballarem, *fent servir el predicat **llista_aleatoria**, donat pel professor*.
 
-- Opció **esc**.
+- Menú d'opcions i programa principal. Juan José Gómez Villegas
 
-- Opció **des**.
+- Opció **esc**. Juan José Gómez Villegas
 
-- Opció **sum**.
+- Opció **des**. Guillem Pozo Sebastián
 
-- Opció **pas**.
+- Opció **sum**. Juan José Gómez Villegas
 
-- Opció **pase**.
+- Opció **pas**. Juan José Gómez Villegas
+
+- Opció **pase**. Guillem Pozo Sebastián
 
 ## Prolog utilitzat
 
