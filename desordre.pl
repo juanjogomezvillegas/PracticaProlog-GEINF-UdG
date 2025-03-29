@@ -39,21 +39,21 @@ llista_aleatoria_(N,Llista,[X|RestaPermutats],Llavor):-
 
 %escriure_llista(-L) ==> L serà la llista que demanarem (L és un paràmetre de sortida)
 escriure_llista(L) :-
-    print('Entra la llista: '),nl,
+    write('Entra la llista: '),nl,
 	read(L).
 
 %generar_llista(-L) ==> L serà la llista que generarem (L és un paràmetre de sortida)
 generar_llista(L) :-
-    print('Entra la mida de la llista: '),nl,
+    write('Entra la mida de la llista: '),nl,
 	read(N),
-	print('Entra la llavor: '),nl,
+    write('Entra la llavor: '),nl,
 	read(R),
     llista_aleatoria(N,R,L).
 
 %preguntar_accio(-Res) ==> Res la llista d'accions que l'usuari vol realitzar
 preguntar_accio(Res) :-
     accions_disp(X),
-    print('Entra llista accions: '),nl,
+    write('Entra llista accions: '),nl,
     read(Accions),
     member(Accio, Accions),
     member(Accio, X),
@@ -101,6 +101,14 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 %               Pas es el nombre passos aplicats (metrica pas) LlistaPassos conte la llista de passos aplicats, per ordre.
 %               El predicat ordenacio minima es demostra una sola vegada
 
+%printejar_sense_format(+L) ==> imprimeix la llista L sense brackets
+printejar_sense_format([]).
+printejar_sense_format([X]) :-  write(X). % Si és l'últim element, no escriurem la coma
+printejar_sense_format([X|Xs]) :-
+    write(X),
+    write(','),
+    printejar_sense_format(Xs).
+
 %escriure_passos(+L) ==> escriu tots els passos de la llista L
 
 %escriure_pas(+Pas) ==> escriu el pas Pas, que es algun dels vistos en les accions inserir, capgirar i intercalar
@@ -108,23 +116,23 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 % PROGRAMA PRINCIPAL
 
 %executarOperacio(+X,?L) :- X és una opció implementada, alguns valors de X (algunes opcions) fan servir la llista L, alguns no
-executarOperacio(esc,L) :- write(L),nl,!.
+executarOperacio(esc,L) :- printejar_sense_format(L),nl,!.
 executarOperacio(des,L) :- nombre_desubicats(L,Des),print(Des),nl,!.
 executarOperacio(sum,L) :- suma_desplacaments(L,Sum),print(Sum),nl,!.
 executarOperacio(pas,L) :- preguntar_accio(Accions),print(Accions),print(L),nl,!.
 executarOperacio(pase,L) :- preguntar_accio(Accions),print(Accions),print(L),nl,!.
 executarOperacio(sor,_) :- nl,!.
-executarOperacio(_,_) :- nl,print('opcio incorrecte'),nl.
+executarOperacio(_,_) :- nl,write('Opcio incorrecte'),nl.
 
 %main2(+L) ==> L és la llista amb la que treballarem
 main2(L) :- repeat,
-	print('Entrar opcio:'),nl,
-	print('- Escriure llista: esc'),nl,
-	print('- Calcular desordre amb nombre de desubicats: des'),nl,
-	print('- Calcular desordre amb suma de desplacaments: sum'),nl,
-	print('- Calcular desordre amb nombre minim de passos: pas'),nl,
-	print('- Calcular desordre amb nombre minim de passos i escriure passos: pase'),nl,
-	print('- Sortir: sor'),nl,
+    write('Entrar opcio:'),nl,
+    write('- Escriure llista: esc'),nl,
+    write('- Calcular desordre amb nombre de desubicats: des'),nl,
+    write('- Calcular desordre amb suma de desplacaments: sum'),nl,
+    write('- Calcular desordre amb nombre minim de passos: pas'),nl,
+    write('- Calcular desordre amb nombre minim de passos i escriure passos: pase'),nl,
+    write('- Sortir: sor'),nl,
 	read(Opcio),
     executarOperacio(Opcio,L),
 	Opcio=sor,
@@ -132,16 +140,16 @@ main2(L) :- repeat,
 
 %main1(+X,-L) ==> L és una llista generada segons el valor de X (pot ser m|a)
 main1(a) :- 
-	generar_llista(L),nl,
+    generar_llista(L),
     main2(L),!.
 main1(m) :- 
-	escriure_llista(L),nl,
+    escriure_llista(L),
     main2(L),!.
-main1(_) :- print('opcio incorrecte'),nl.
+main1(_) :- write('Opcio incorrecte'),nl.
 
 %main ==> programa principal sense cap paràmetre
 main :- 
-    print('Llista manual (m) o aleatoria (a) ? '), 
+    write('Llista manual (m) o aleatoria (a) ? '),
     read(Lt),
     main1(Lt),
     !.
