@@ -37,6 +37,11 @@ llista_aleatoria_(N,Llista,[X|RestaPermutats],Llavor):-
 
 % PREDICATS PROPIS
 
+%ordenada(+L) ==> L és una llista de nombres ordenada de menor a major
+ordenada([]).
+ordenada([_]).
+ordenada([X,Y|L]) :- X=<Y,ordenada([Y|L]).
+
 %llegir_llista(-L) ==> L serà la llista que demanarem (L és un paràmetre de sortida)
 llegir_llista(L) :-
     write('Entra la llista: '),nl,
@@ -97,6 +102,11 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 %a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
 a_inserir([],[],_).
 a_inserir([X|Xs],L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- 
+    Prefix2\=[],
+    Prefix1=<Fragment,
+    Fragment<=Prefix2,
+    append(Prefix1,Prefix2,Prefix),
+    ordenada(Fragment),
     append(P1,PR1,Xs),
     Prefix1 = P1,
     append(P2,PR2,PR1),
