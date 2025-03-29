@@ -95,11 +95,19 @@ nombre_desubicats(L,Des) :- nombre_desubicats_i(L,0,0,Des).
 suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
 %a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
-a_inserir(L,L,[]).
-a_inserir([X|Xs],L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- !.
+a_inserir([],[],_).
+a_inserir([X|Xs],L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- 
+    append(P1,PR1,Xs),
+    Prefix1 = P1,
+    append(P2,PR2,PR1),
+    Prefix2 = P2,
+    append(F,S,PR2),
+    Fragment = F,
+    Sufix = S,
+    a_inserir(Xs,L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)).
 
 %a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
-a_capgirar(L,L,[]).
+a_capgirar([],[],_).
 a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- !.
 
 %a_intercalar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
