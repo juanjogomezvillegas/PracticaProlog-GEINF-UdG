@@ -101,26 +101,24 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
 %a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
 a_inserir([],[],_).
-a_inserir([X|Xs],L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- 
-    Prefix2\=[],
-    Prefix1=<Fragment,
-    Fragment<=Prefix2,
-    append(Prefix1,Prefix2,Prefix),
-    ordenada(Fragment),
-    append(P1,PR1,Xs),
-    Prefix1 = P1,
-    append(P2,PR2,PR1),
-    Prefix2 = P2,
-    append(F,S,PR2),
-    Fragment = F,
-    Sufix = S,
-    a_inserir(Xs,L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)).
+a_inserir([X|Xs],[Y|Ys],pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- 
+    % construim la tupla pas_inserir
+    append(Prefix1,RestaP1,[X|Xs]),
+    append(Prefix2,RestaP2,RestaP1),
+    append(Fragment,Sufix,RestaP2),
+    % construim la llista L2
+    append(Prefix1,Fragment,L21),
+    append(L21,Prefix2,L22),
+    append(L22,Sufix,[Y|Ys]),
+    a_inserir(Xs,Ys,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)).
 
 %a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
 a_capgirar([],[],_).
-a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- !.
+%a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- !.
 
 %a_intercalar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
+a_intercalar([],[],_).
+%a_intercalar([X|Xs],L2,_) :- !.
 
 %ordenacio_minima(+L,+Accions,?L2,?Pas,−LlistaPassos) ==> L2 es la llista L ordenada.
 %               S'ha ordenat amb una sequencia d'aplicacions de les accions dins de la llista Accions, que pot ser qualsevol subconjunt de {a_inserir, a_capgirar, a_intercalar}. El nombre de passos de la sequencia es el minim possible.
@@ -161,7 +159,7 @@ main1(a) :-
     generar_llista(L),
     main2(L),!.
 main1(m) :- 
-	llegir_llista(L),nl,
+	llegir_llista(L),
     main2(L),!.
 main1(_) :- write('Opcio incorrecte'),nl.
 
