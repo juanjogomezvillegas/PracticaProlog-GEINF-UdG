@@ -83,8 +83,9 @@ ultimElem(L,X) :- length(L,N),Np is N - 1,nessim(L,Np,X).
 %primerElem(?L,?X) ==> X apareix a la primera posició de L
 primerElem(L,X) :- nessim(L,0,X).
 
-%append_a_tres(?L1,?L2,?L3,?Res) ==> Res és la concatenació de L1, L2 i L3
-append_a_tres(L1,L2,L3,Res) :- append(L1,L2,La),append(La,L3,Res).
+%append_a_essim(+[L1,...,Ln],?Res) ==> Res és la concatenació de com a mínim dues llistes
+append_a_essim([L1],L1).
+append_a_essim([L1,L2|Ls],Res) :- append(L1,L2,La),append_a_essim([La|Ls],Res).
 
 %ordenada(+L,+T)
 %ordenada(+L,+T) ==> L és una llista de nombres ordenada T, T pot ser creixentment (c) o decreixentment (d)
@@ -126,16 +127,23 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
 %a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
 a_inserir([],[],_).
-a_inserir([X|Xs],[Y|Ys],pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- 
+a_inserir([X|Xs],L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- 
     % construim la tupla pas_inserir
-    append(Prefix1,RestaP1,[X|Xs]),
-    append(Prefix2,RestaP2,RestaP1),
-    append(Fragment,Sufix,RestaP2),
+    append(Prefix,RestaLl,[X|Xs]),
+    append(Fragment,Sufix,RestaLl),
+    append(Prefix1,Prefix2,Prefix),
+    %precondicions
+    Prefix1\=[],
+    ultimElem(Prefix1,UltimPre1),
+    primerElem(Fragment,PrimerFra),
+    UltimPre1<PrimerFra,
+    Prefix2\=[],
+    primerElem(Prefix2,PrimerPre2),
+    ultimElem(Fragment,UltimFra),
+    UltimFra<PrimerFra,
+    ordenada(Fragment,c),
     % construim la llista L2
-    append(Prefix1,Fragment,L21),
-    append(L21,Prefix2,L22),
-    append(L22,Sufix,[Y|Ys]),
-    a_inserir(Xs,Ys,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)).
+    append_a_essim([Prefix1,Fragment,Prefix2,Sufix],L2).
 
 %a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
 a_capgirar([],[],_).
@@ -152,7 +160,7 @@ a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira creix esq
     ultimElem(Fragment,UltimFra),
     UltimPre > UltimFra,
     capgira(Fragment,Fragment2),
-    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
+    append_a_essim([Prefix,Fragment2,Sufix],L2),!.
 a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira creix dreta
     Sufix\=[],
     ordenada(Fragment,c),
@@ -160,7 +168,7 @@ a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira creix dre
     primerElem(Fragment,PrimerFra),
     PrimerSuf < PrimerFra,
     capgira(Fragment,Fragment2),
-    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
+    append_a_essim([Prefix,Fragment2,Sufix],L2),!.
 a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix esquerra
     Prefix\=[],
     ordenada(Fragment,d),
@@ -168,7 +176,7 @@ a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix e
     ultimElem(Fragment,UltimFra),
     UltimPre < UltimFra,
     capgira(Fragment,Fragment2),
-    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
+    append_a_essim([Prefix,Fragment2,Sufix],L2),!.
 a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix dreta
     Sufix\=[],
     ordenada(Fragment,d),
@@ -176,7 +184,7 @@ a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix d
     primerElem(Fragment,PrimerFra),
     PrimerSuf > PrimerFra,
     capgira(Fragment,Fragment2),
-    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
+    append_a_essim([Prefix,Fragment2,Sufix],L2),!.
 
 %a_intercalar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
 a_intercalar([],[],_).
