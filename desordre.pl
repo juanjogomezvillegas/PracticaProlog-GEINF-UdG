@@ -112,6 +112,7 @@ a_inserir([X|Xs],[Y|Ys],pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :-
     append(L22,Sufix,[Y|Ys]),
     a_inserir(Xs,Ys,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)).
 
+
 %a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
 a_capgirar([],[],_).
 %a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- !.
