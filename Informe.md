@@ -6,17 +6,27 @@
 
 - El menú principal (predicat **main**) funciona correctament, i també funciona el predicat **llegir_llista** per llegir la llista amb la que treballarem, i el predicat **generar_llista** per generar de forma aleatòria la llista amb la que treballarem, *fent servir el predicat **llista_aleatoria**, donat pel professor*.
 
-- Menú d'opcions i programa principal. Juan José Gómez Villegas
-
 - Opció **esc**. Juan José Gómez Villegas
 
-- Opció **des**. Guillem Pozo Sebastián
+- Opció **des**, *exercici 1*. Guillem Pozo Sebastián
 
-- Opció **sum**. Juan José Gómez Villegas
+- Opció **sum**, *exercici 2*. Juan José Gómez Villegas
 
 - Opció **pas**. Juan José Gómez Villegas
 
+    - inserir, *exercici 3*.
+
+    - capgirar, *exercici 4*.
+
+    - intercalar, *exercici 5*.
+
+    - càlcul mètrica pas, *exercici 6*.
+
 - Opció **pase**. Guillem Pozo Sebastián
+
+    - escriptura de passos, *exercici 7*.
+
+- Menú d'opcions i programa principal, *exercici 8*. Juan José Gómez Villegas
 
 ## Prolog utilitzat
 

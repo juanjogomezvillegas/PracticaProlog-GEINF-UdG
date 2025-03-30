@@ -4,12 +4,10 @@ Accedir a [l'Informe](https://github.com/juanjogomezvillegas/PracticaProlog-GEIN
 
 ## Precondicions sobre la instanciació
 
-- $+P$: El paràmetre P ha d'estar instanciat.
+- $+P$: El paràmetre $P$ ha d'estar instanciat.
 
-- $-P$: El paràmetre P no pot estar instanciat.
+- $-P$: El paràmetre $P$ no pot estar instanciat.
 
-- $?P$: No hi ha cap precondició d'instanciació sobre el paràmetre P.
+- $?P$: No hi ha cap precondició d'instanciació sobre el paràmetre $P$.
 
-- $0P$: El paràmetre P  pot ser utilitzat com a consulta.
-
-
+- $0P$: El paràmetre $P$ pot ser utilitzat com a consulta.
