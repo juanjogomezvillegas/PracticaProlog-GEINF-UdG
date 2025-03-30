@@ -68,6 +68,31 @@ preguntar_accio(Res) :-
 escriure_llista([X]) :- format('%d',[X]),!.
 escriure_llista([X|L]) :- L\=[],format('%d,',[X]),escriure_llista(L).
 
+%capgira(?L1,?L2)
+%capgira(L1,L2) ==> L2 és la llista L1 capgirada
+capgira([],[]).
+capgira([X|Xs],L2) :- capgira(Xs,Ys),append(Ys,[X],L2).
+
+%nessim(?L,+N,?X) ==> X apareix a la posició N de L
+nessim([X|_],0,X).
+nessim([_|Xs],N,X) :- N>0,Np is N - 1,nessim(Xs,Np,X).
+
+%ultimElem(?L,?X) ==> X apareix a la ultima posició de L
+ultimElem(L,X) :- length(L,N),Np is N - 1,nessim(L,Np,X).
+
+%primerElem(?L,?X) ==> X apareix a la primera posició de L
+primerElem(L,X) :- nessim(L,0,X).
+
+%append_a_tres(?L1,?L2,?L3,?Res) ==> Res és la concatenació de L1, L2 i L3
+append_a_tres(L1,L2,L3,Res) :- append(L1,L2,La),append(La,L3,Res).
+
+%ordenada(+L,+T)
+%ordenada(+L,+T) ==> L és una llista de nombres ordenada T, T pot ser creixentment (c) o decreixentment (d)
+ordenada([],_).
+ordenada([_],_).
+ordenada([X,Y|L],c) :- X=<Y,ordenada([Y|L],c).
+ordenada([X,Y|L],d) :- X>=Y,ordenada([Y|L],d).
+
 %nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Per cada element de la llista L, Pos correspon a la posició que hauria d'ocupar, i Count és el comptador de nombres desubicats
 nombre_desubicats_i([],_,Count,Count). % Aquí és on es fa l'assignació Des=Count
 nombre_desubicats_i([X|Xs],Pos,Count,Des) :- % Cas si l'element X esta desubicat a la llista L, si X != Pos
@@ -114,7 +139,44 @@ a_inserir([X|Xs],[Y|Ys],pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :-
 
 %a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
 a_capgirar([],[],_).
-%a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- !.
+a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira tot
+    Prefix=[],
+    Sufix=[],
+    ordenada(Fragment,d),
+    capgira(Fragment,Fragment2),
+    L2=Fragment2,!.
+a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira creix esquerra
+    Prefix\=[],
+    ordenada(Fragment,c),
+    ultimElem(Prefix,UltimPre),
+    ultimElem(Fragment,UltimFra),
+    UltimPre > UltimFra,
+    capgira(Fragment,Fragment2),
+    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
+a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira creix dreta
+    Sufix\=[],
+    ordenada(Fragment,c),
+    primerElem(Sufix,PrimerSuf),
+    primerElem(Fragment,PrimerFra),
+    PrimerSuf < PrimerFra,
+    capgira(Fragment,Fragment2),
+    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
+a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix esquerra
+    Prefix\=[],
+    ordenada(Fragment,d),
+    ultimElem(Prefix,UltimPre),
+    ultimElem(Fragment,UltimFra),
+    UltimPre < UltimFra,
+    capgira(Fragment,Fragment2),
+    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
+a_capgirar([X|Xs],L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix dreta
+    Sufix\=[],
+    ordenada(Fragment,d),
+    primerElem(Sufix,PrimerSuf),
+    primerElem(Fragment,PrimerFra),
+    PrimerSuf > PrimerFra,
+    capgira(Fragment,Fragment2),
+    append_a_tres(Prefix,Fragment2,Sufix,L2),!.
 
 %a_intercalar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
 a_intercalar([],[],_).
