@@ -121,8 +121,8 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
 %validar_fragment(+Prefix, +Fragment) ==> Valida que el últim element de Prefix sigui menor o igual que el primer element de Fragment
 validar_fragment([],_).
-validar_fragment(_,[]) :- fail.
-validar_fragment(Prefix, Fragment) :-
+validar_fragment(Prefix, Fragment) :- 
+    Fragment \= [],
     ultimElem(Prefix, UltimPre),
     primerElem(Fragment, PrimerFra),
     UltimPre =< PrimerFra.
