@@ -37,11 +37,6 @@ llista_aleatoria_(N,Llista,[X|RestaPermutats],Llavor):-
 
 % PREDICATS PROPIS
 
-%ordenada(+L) ==> L és una llista de nombres ordenada de menor a major
-ordenada([]).
-ordenada([_]).
-ordenada([X,Y|L]) :- X=<Y,ordenada([Y|L]).
-
 %llegir_llista(-L) ==> L serà la llista que demanarem (L és un paràmetre de sortida)
 llegir_llista(L) :-
     write('Entra la llista: '),nl,
@@ -91,8 +86,8 @@ append_a_essim([L1,L2|Ls],Res) :- append(L1,L2,La),append_a_essim([La|Ls],Res).
 %ordenada(+L,+T) ==> L és una llista de nombres ordenada T, T pot ser creixentment (c) o decreixentment (d)
 ordenada([],_).
 ordenada([_],_).
-ordenada([X,Y|L],c) :- X=<Y,ordenada([Y|L],c).
-ordenada([X,Y|L],d) :- X>=Y,ordenada([Y|L],d).
+ordenada([X,Y|L],c) :- X=<Y,ordenada([Y|L],c),!.
+ordenada([X,Y|L],d) :- X>=Y,ordenada([Y|L],d),!.
 
 %nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Per cada element de la llista L, Pos correspon a la posició que hauria d'ocupar, i Count és el comptador de nombres desubicats
 nombre_desubicats_i([],_,Count,Count). % Aquí és on es fa l'assignació Des=Count
@@ -136,7 +131,7 @@ a_inserir(L, L2, pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
     append(Fragment, Sufix, Resta2),
     Fragment \= [],
     % Precondicions
-    ordenada(Fragment),
+    ordenada(Fragment,c),
     ultimElem(Prefix1, UltimPre1),
     primerElem(Fragment, PrimerFra),
     UltimPre1 =< PrimerFra,
