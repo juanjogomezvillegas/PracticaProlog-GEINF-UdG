@@ -127,23 +127,26 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
 %a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
 a_inserir([],[],_).
-a_inserir([X|Xs],L2,pas_inserir(Prefix1,Prefix2,Fragment,Sufix)) :- 
-    % construim la tupla pas_inserir
-    append(Prefix,RestaLl,[X|Xs]),
-    append(Fragment,Sufix,RestaLl),
-    append(Prefix1,Prefix2,Prefix),
-    %precondicions
-    Prefix1\=[],
-    ultimElem(Prefix1,UltimPre1),
-    primerElem(Fragment,PrimerFra),
-    UltimPre1<PrimerFra,
-    Prefix2\=[],
-    primerElem(Prefix2,PrimerPre2),
-    ultimElem(Fragment,UltimFra),
-    UltimFra<PrimerFra,
-    ordenada(Fragment,c),
-    % construim la llista L2
-    append_a_essim([Prefix1,Fragment,Prefix2,Sufix],L2).
+a_inserir(L, L2, pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
+    % Construim la tupla pas_inserir (Separem les llistes d'esquerra a dreta Prefix1, Prefix2, Fragment i Sufix)
+    append(Prefix1, Resta1, L),
+    Prefix1 \= [],
+    append(Prefix2, Resta2, Resta1),
+    Prefix2 \= [],
+    append(Fragment, Sufix, Resta2),
+    Fragment \= [],
+    % Precondicions
+    ordenada(Fragment),
+    ultimElem(Prefix1, UltimPre1),
+    primerElem(Fragment, PrimerFra),
+    UltimPre1 =< PrimerFra,
+    ultimElem(Fragment, UltimFra),
+    primerElem(Prefix2, PrimerPre2),
+    UltimFra =< PrimerPre2,
+    append(Prefix1, Prefix2, Prefix), % Concatenem Prefix1 i Prefix2 i el resultat ha de ser una llista ordenada
+    ordenada(Prefix, c),
+    % Construeix la llista resultant L2
+    append_a_essim([Prefix1, Fragment, Prefix2, Sufix], L2).
 
 %a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
 a_capgirar([],[],_).
