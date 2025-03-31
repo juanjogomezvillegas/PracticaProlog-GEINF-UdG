@@ -119,24 +119,27 @@ nombre_desubicats(L,Des) :- nombre_desubicats_i(L,0,0,Des).
 %suma_desplacaments(+L,?Sum) ==> Sum és la suma de diferencies (en valor absolut) entre la posicio que ocupa un nombre a L i la posicio que hauria d'ocupar
 suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 
+%validar_fragment(+Prefix, +Fragment) ==> Valida que el últim element de Prefix sigui menor o igual que el primer element de Fragment
+validar_fragment([],_).
+validar_fragment(_,[]) :- fail.
+validar_fragment(Prefix, Fragment) :-
+    ultimElem(Prefix, UltimPre),
+    primerElem(Fragment, PrimerFra),
+    UltimPre =< PrimerFra.
+
 %a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
 a_inserir([],[],_).
 a_inserir(L, L2, pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
     % Construim la tupla pas_inserir (Separem les llistes d'esquerra a dreta Prefix1, Prefix2, Fragment i Sufix)
     append(Prefix1, Resta1, L),
-    Prefix1 \= [],
     append(Prefix2, Resta2, Resta1),
     Prefix2 \= [],
     append(Fragment, Sufix, Resta2),
     Fragment \= [],
     % Precondicions
     ordenada(Fragment,c),
-    ultimElem(Prefix1, UltimPre1),
-    primerElem(Fragment, PrimerFra),
-    UltimPre1 =< PrimerFra,
-    ultimElem(Fragment, UltimFra),
-    primerElem(Prefix2, PrimerPre2),
-    UltimFra =< PrimerPre2,
+    validar_fragment(Prefix1, Fragment),
+    validar_fragment(Fragment, Prefix2),
     append(Prefix1, Prefix2, Prefix), % Concatenem Prefix1 i Prefix2 i el resultat ha de ser una llista ordenada
     ordenada(Prefix, c),
     % Construeix la llista resultant L2
