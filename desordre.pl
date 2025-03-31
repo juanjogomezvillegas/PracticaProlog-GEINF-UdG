@@ -82,7 +82,6 @@ primerElem(L,X) :- nessim(L,0,X).
 append_a_essim([L1],L1).
 append_a_essim([L1,L2|Ls],Res) :- append(L1,L2,La),append_a_essim([La|Ls],Res).
 
-%ordenada(+L,+T)
 %ordenada(+L,+T) ==> L és una llista de nombres ordenada T, T pot ser creixentment (c) o decreixentment (d)
 ordenada([],_).
 ordenada([_],_).
