@@ -12,13 +12,13 @@
 
 - Opció **sum**, *exercici 2*. Juan José Gómez Villegas
 
-- Opció **pas**. Juan José Gómez Villegas
+- Opció **pas**.
 
-    - inserir, *exercici 3*.
+    - inserir, *exercici 3*. Juan José Gómez Villegas i Guillem Pozo Sebastián
 
-    - capgirar, *exercici 4*.
+    - capgirar, *exercici 4*. Juan José Gómez Villegas
 
-    - intercalar, *exercici 5*.
+    - intercalar, *exercici 5*. Juan José Gómez Villegas
 
     - càlcul mètrica pas, *exercici 6*.
 
