@@ -20,7 +20,7 @@
 
     - intercalar, *exercici 5*. Juan José Gómez Villegas
 
-    - càlcul mètrica pas, *exercici 6*.
+    - càlcul mètrica pas, *exercici 6*. Guillem Pozo Sebastián
 
 - Opció **pase**. Guillem Pozo Sebastián
 
