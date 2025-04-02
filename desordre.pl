@@ -306,9 +306,6 @@ escriure_pas(pas_separar_dre(Senars, Parells)) :-
     print(')'), nl.
 escriure_pas(_).
 
-%escriure_pas(+Pas) ==> escriu el pas Pas, que es algun dels vistos en les accions inserir, capgirar i intercalar
-escriure_pas(Pas) :- !.
-
 % PROGRAMA PRINCIPAL
 
 %executarOperacio(+X,?L) :- X és una opció implementada, alguns valors de X (algunes opcions) fan servir la llista L, alguns no
