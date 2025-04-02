@@ -60,8 +60,9 @@ preguntar_accio(Res) :-
     Res = Accions.
 
 %escriure_llista(+L) ==> L és la llista que s'escriurà per pantalla
-escriure_llista([X]) :- format('%d',[X]),!.
-escriure_llista([X|L]) :- L\=[],format('%d,',[X]),escriure_llista(L).
+escriure_llista([]).
+escriure_llista([X]) :- write(X).
+escriure_llista([X|L]) :- format('%d,',[X]), escriure_llista(L).
 
 %capgira(?L1,?L2)
 %capgira(L1,L2) ==> L2 és la llista L1 capgirada
