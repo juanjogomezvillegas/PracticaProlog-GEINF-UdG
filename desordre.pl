@@ -63,6 +63,12 @@ preguntar_accio(Res) :-
 escriure_llista([X]) :- format('%d',[X]),!.
 escriure_llista([X|L]) :- L\=[],format('%d,',[X]),escriure_llista(L).
 
+%es_parell(+N) ==> valida si N és parell
+es_parell(N) :- N mod 2 =:= 0.
+
+%es_senar(+N) ==> valida si N és senar
+es_senar(N) :- N mod 2 =:= 1.
+
 %capgira(?L1,?L2)
 %capgira(L1,L2) ==> L2 és la llista L1 capgirada
 capgira([],[]).
@@ -87,6 +93,10 @@ ordenada([],_).
 ordenada([_],_).
 ordenada([X,Y|L],c) :- X=<Y,ordenada([Y|L],c),!.
 ordenada([X,Y|L],d) :- X>=Y,ordenada([Y|L],d),!.
+
+%inserir_ultim(?X,?L1,?L2) ==> L2 és la llista L1 amb X al final
+inserir_ultim(X,[],[X]).
+inserir_ultim(X,[Y|L1],[Y|L2]) :- inserir_ultim(X,L1,L2).
 
 %nombre_desubicats_i(+L,+Pos,+Count,?Des) ==> Per cada element de la llista L, Pos correspon a la posició que hauria d'ocupar, i Count és el comptador de nombres desubicats
 nombre_desubicats_i([],_,Count,Count). % Aquí és on es fa l'assignació Des=Count
@@ -193,12 +203,32 @@ a_capgirar(L,L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix dreta
     capgira(Fragment,Fragment2),
     append_a_essim([Prefix,Fragment2,Sufix],L2).
 
-%a_intercalar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
+%pas_a_intercalar_div(+L,?Pas) ==> Divideix L entre Esquerra i Dreta
+pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)) :- 
+    append(Esquerra,Dreta,L),
+    Esquerra \= [],
+    Dreta \= [].
+
+%pas_a_intercalar_par_sen(+L,?Pas) ==> Divideix L entre Parells i Senars
+pas_a_intercalar_par_sen(L,pas_separar(Parells,Senars)) :- 
+    append(Parells,Senars,L),
+    Parells \= [],
+    Senars \= [].
+
+%a_intercalar(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
 a_intercalar([],[],_).
-a_intercalar(L,L2,pas_unir_esq(Esquerra,Dreta)) :- !.
-a_intercalar(L,L2,pas_unir_dre(Esquerra,Dreta)) :- !.
-a_intercalar(L,L2,pas_separar_esq(Parells,Senars)) :- !.
-a_intercalar(L,L2,pas_separar_dre(Parells,Senars)) :- !.
+a_intercalar(L,L2,pas_unir_esq(Esquerra,Dreta)) :- 
+    pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)),
+    L2 = L,!.
+a_intercalar(L,L2,pas_unir_dre(Esquerra,Dreta)) :- 
+    pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta))
+    L2 = L,!.
+a_intercalar(L,L2,pas_separar_esq(Parells,Senars)) :- 
+    pas_a_intercalar_par_sen(L,pas_separar(Parells,Senars)),
+    L2 = L,!.
+a_intercalar(L,L2,pas_separar_dre(Parells,Senars)) :- 
+    pas_a_intercalar_par_sen(L,pas_separar(Parells,Senars)),
+    L2 = L,!.
 
 %ordenacio_minima(+L,+Accions,?L2,?Pas,−LlistaPassos) ==> L2 es la llista L ordenada.
 %               S'ha ordenat amb una sequencia d'aplicacions de les accions dins de la llista Accions, que pot ser qualsevol subconjunt de {a_inserir, a_capgirar, a_intercalar}. El nombre de passos de la sequencia es el minim possible.
