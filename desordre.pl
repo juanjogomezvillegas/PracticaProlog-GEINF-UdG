@@ -267,12 +267,11 @@ escriure_passos(L) :-
     nl, write('Llista ordenada: '), print(L2), nl,
     write('Solucio trobada amb '), write(NPas), write(' passos'), nl.
 
-% escriure_pas(+Pas) ==> Escriu el pas Pas en el format desitjat.
+%escriure_pas(+Pas) ==> escriu el pas Pas, que es algun dels vistos en les accions inserir, capgirar i intercalar
 escriure_pas(pas_capgirar(Prefix, Fragment, Sufix)) :-
     write('['), escriure_llista(Prefix), write('('), escriure_llista(Fragment), write(')'), escriure_llista(Sufix),
     write('] == Capgirar ==> ['),
-    write('['), escriure_llista(Prefix),
-    write('('), escriure_llista(FragmentRevertit), write(')'), escriure_llista(Sufix), write(')]'), nl.
+    write('['), escriure_llista(Prefix), write('('), escriure_llista(Fragment), write(')'), escriure_llista(Sufix), write(')]'), nl.
 escriure_pas(pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
     write('['), escriure_llista(Prefix1), write(','), escriure_llista(Prefix2), write(',('), escriure_llista(Fragment), write('),'), escriure_llista(Sufix),
     write('] == Inserir ==> ['),
