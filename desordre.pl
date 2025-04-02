@@ -194,8 +194,107 @@ a_intercalar([],[],_).
 %               S'ha ordenat amb una sequencia d'aplicacions de les accions dins de la llista Accions, que pot ser qualsevol subconjunt de {a_inserir, a_capgirar, a_intercalar}. El nombre de passos de la sequencia es el minim possible.
 %               Pas es el nombre passos aplicats (metrica pas) LlistaPassos conte la llista de passos aplicats, per ordre.
 %               El predicat ordenacio minima es demostra una sola vegada
+ordenacio_minima([], _, [], 0, []). % Cas base: llista buida.
+ordenacio_minima([X], _, [X], 0, []). % Cas base: llista d'un sol element.
+ordenacio_minima(L, Accions, L2, Pas, LlistaPassos) :-
+    ordenacio_minima_rec(L, Accions, [], 0, L2, Pas, LlistaPassos).
+
+%ordenacio_minima_rec(+L,+Accions,?L2,?Pas,−LlistaPassos) ==> Permete la ordenacio minima de la llista L, aplicant les accions disponibles a la llista d'accions Accions.
+ordenacio_minima_rec(L, _, PassosActuals, PasActual, L, PasActual, PassosActuals) :-
+    ordenada(L, c), % Si la llista està ordenada, retornem la solució.
+    !.
+ordenacio_minima_rec(L, Accions, PassosActuals, PasActual, L2, Pas, LlistaPassos) :-
+    ordenacio_minima_i(L, Accions, PassosActuals, PasActual, LIntermedia, PasIntermedi, PassosIntermedis),
+    ordenacio_minima_rec(LIntermedia, Accions, PassosIntermedis, PasIntermedi, L2, Pas, LlistaPassos).
+
+% ordenacio_minima_i(+L, +Accions, +PassosActuals, +PasActual, ?L2, ?Pas, -LlistaPassos) ==>
+% L és la llista d'entrada,
+% Accions és la llista d'accions disponibles
+% PassosActuals és la llista de passos aplicats fins ara
+% PasActual és el nombre de passos aplicats fins ara
+% L2 és la llista resultant
+% Pas és el nombre total de passos aplicats
+% LlistaPassos és la llista de passos aplicats.
+ordenacio_minima_i(L, [], PassosActuals, PasActual, L, PasActual, PassosActuals).
+ordenacio_minima_i(L, [Accio|RestAccions], PassosActuals, PasActual, L2, Pas, PassosActuals) :-
+    call(Accio, L, LIntermedia, _), % Apliquem l'acció a la llista
+    member((LIntermedia, _), PassosActuals),
+    ordenacio_minima_i(LIntermedia, RestAccions, PassosActuals, PasActual, L2, Pas, PassosActuals). % Continuem amb la llista intermitja
+ordenacio_minima_i(L, [Accio|RestAccions], PassosActuals, PasActual, L2, Pas, LlistaPassos) :-
+    call(Accio, L, LIntermedia, PasAccio), % Apliquem l'acció a la llista
+    PasSeguent is PasActual + 1,
+    append(PassosActuals, [PasAccio], NousPassos), % Afegim el nou pas al final de la llista, per tenir la llista de passos en ordre
+    ordenacio_minima_i(LIntermedia, RestAccions, NousPassos, PasSeguent, L2, Pas, LlistaPassos). % Continuem amb la llista intermitja
+
+%millor_resultat(+Solucions, ?MillorSolucio) ==> Donat una llista de solucions, retorna la millor solució segons el número de passos
+% Solucio és una llista composada per L2 (la llista ordenada), Pas (el nombre de passos aplicats) i Passos (la llista de passos aplicats)
+millor_resultat([], _) :- fail. % No hi ha solucions, falla.
+millor_resultat([Solucio], Solucio) :- !. % Si només hi ha una solució, és la millor.
+millor_resultat([[L2, 0, LlistaPassos] | _], [L2, 0, LlistaPassos]) :- !. % Si hi ha una solució amb 0 passos, és la millor.
+millor_resultat([[L2_1, Pas1, LlistaPassos1], [_, Pas2, _] | Resta], MillorSolucio) :-
+    Pas1 =< Pas2,
+    millor_resultat([[L2_1, Pas1, LlistaPassos1] | Resta], MillorSolucio).
+millor_resultat([[_, Pas1, _], [L2_2, Pas2, LlistaPassos2] | Resta], MillorSolucio) :-
+    Pas1 > Pas2,
+    millor_resultat([[L2_2, Pas2, LlistaPassos2] | Resta], MillorSolucio).
+
+%mostrar_passos(+Passos) ==> Predicat recursiu per mostrar tots els passos aplicats
+mostrar_passos([]).
+mostrar_passos([Pas|Resta]) :-
+    escriure_pas(Pas),
+    mostrar_passos(Resta).
 
 %escriure_passos(+L) ==> escriu tots els passos de la llista L
+escriure_passos([]).
+escriure_passos(L) :-
+    preguntar_accio(Accions),
+    write('Llista original: '),
+    print(L), nl,
+    findall([L2, Pas, LlistaPassos], ordenacio_minima(L, Accions, L2, Pas, LlistaPassos), Solucions),
+    millor_resultat(Solucions, [L2, NPas, LlistaPassos]), % NPas és el nombre de passos aplicats en la millor solució
+    mostrar_passos(LlistaPassos), % Mostrem els passos aplicats
+    nl, write('Llista ordenada: '), print(L2), nl,
+    write('Solucio trobada amb '), write(NPas), write(' passos'), nl.
+
+% escriure_pas(+Pas) ==> Escriu el pas Pas en el format desitjat.
+escriure_pas(pas_capgirar(Prefix, Fragment, Sufix)) :-
+    write('['), escriure_llista(Prefix), write('('), escriure_llista(Fragment), write(')'), escriure_llista(Sufix),
+    write('] == Capgirar ==> ['),
+    write('['), escriure_llista(Prefix),
+    write('('), escriure_llista(FragmentRevertit), write(')'), escriure_llista(Sufix), write(')]'), nl.
+escriure_pas(pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
+    write('['), escriure_llista(Prefix1), write(','), escriure_llista(Prefix2), write(',('), escriure_llista(Fragment), write('),'), escriure_llista(Sufix),
+    write('] == Inserir ==> ['),
+    escriure_llista(Prefix1), write(',('), escriure_llista(Fragment), write('),'), escriure_llista(Prefix2), write(','), escriure_llista(Sufix), write(']'), nl.
+% Cas: Unir Esquerra
+escriure_pas(pas_unir_esq(Esquerra, Dreta)) :-
+    print('('), print(Esquerra), print(') + ('), print(Dreta),
+    print(') == Unir Esquerra ==> ('),
+    intercalar_esquerra(Esquerra, Dreta, L2),
+    print(L2),
+    print(')'), nl.
+% Cas: Unir Dreta
+escriure_pas(pas_unir_dre(Esquerra, Dreta)) :-
+    print('('), print(Esquerra), print(') + ('), print(Dreta),
+    print(') == Unir Dreta ==> ('),
+    intercalar_dreta(Esquerra, Dreta, L2),
+    print(L2),
+    print(')'), nl.
+% Cas: Separar Esquerra
+escriure_pas(pas_separar_esq(Parells, Senars)) :-
+    print('('), print(Parells), print(') + ('), print(Senars),
+    print(') == Separar Esquerra ==> ('),
+    append(Parells, Senars, L2),
+    print(L2),
+    print(')'), nl.
+% Cas: Separar Dreta
+escriure_pas(pas_separar_dre(Senars, Parells)) :-
+    print('('), print(Senars), print(') + ('), print(Parells),
+    print(') == Separar Dreta ==> ('),
+    append(Senars, Parells, L2),
+    print(L2),
+    print(')'), nl.
+escriure_pas(_).
 
 %escriure_pas(+Pas) ==> escriu el pas Pas, que es algun dels vistos en les accions inserir, capgirar i intercalar
 
@@ -206,7 +305,7 @@ executarOperacio(esc,L) :- escriure_llista(L),nl,!.
 executarOperacio(des,L) :- nombre_desubicats(L,Des),print(Des),nl,!.
 executarOperacio(sum,L) :- suma_desplacaments(L,Sum),print(Sum),nl,!.
 executarOperacio(pas,L) :- preguntar_accio(Accions),print(Accions),print(L),nl,!.
-executarOperacio(pase,L) :- preguntar_accio(Accions),print(Accions),print(L),nl,!.
+executarOperacio(pase,L) :- escriure_passos(L), nl,!.
 executarOperacio(sor,_) :- nl,!.
 executarOperacio(_,_) :- nl,write('Opcio incorrecte'),nl.
 
