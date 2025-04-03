@@ -89,6 +89,10 @@ primerElem(L,X) :- nessim(L,0,X),!.
 append_a_essim([L1],L1).
 append_a_essim([L1,L2|Ls],Res) :- append(L1,L2,La),append_a_essim([La|Ls],Res).
 
+%append_a_intercalat(?L1,?L2,?Res) ==> Res és el resultat d'intercalar elements de L1 amb els de L2
+append_a_intercalat([],[],[]).
+append_a_intercalat([X|Xs],[Y|Ys],[X,Y|Res]) :- append_a_intercalat(Xs,Ys,Res).
+
 %ordenada(+L,+T) ==> L és una llista de nombres ordenada T, T pot ser creixentment (c) o decreixentment (d)
 ordenada([],_).
 ordenada([_],_).
@@ -204,32 +208,36 @@ a_capgirar(L,L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix dreta
     capgira(Fragment,Fragment2),
     append_a_essim([Prefix,Fragment2,Sufix],L2).
 
+%validar_intercalat(+Lori,+Lres) ==> compara el valor de la metrica sum amb les dues llistes Lori (llista original) i Lres (llista resultant)
+validar_intercalat(Lori,Lres) :- 
+    suma_desplacaments(Lori,Sori),
+    suma_desplacaments(Lres,Sres),
+    Sres<Sori,!.
+
 %pas_a_intercalar_div(+L,?Pas) ==> Divideix L entre Esquerra i Dreta
 pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)) :- 
     append(Esquerra,Dreta,L),
     Esquerra \= [],
     Dreta \= [].
 
-%pas_a_intercalar_par_sen(+L,?Pas) ==> Divideix L entre Parells i Senars
-pas_a_intercalar_par_sen(L,pas_separar(Parells,Senars)) :- 
-    append(Parells,Senars,L),
-    Parells \= [],
-    Senars \= [].
-
 %a_intercalar(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
 a_intercalar([],[],_).
 a_intercalar(L,L2,pas_unir_esq(Esquerra,Dreta)) :- 
     pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)),
-    L2 = L,!.
+    append_a_intercalat(Esquerra,Dreta,L2),
+    validar_intercalat(L,L2),!.
 a_intercalar(L,L2,pas_unir_dre(Esquerra,Dreta)) :- 
-    pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta))
-    L2 = L,!.
+    pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)),
+    append_a_intercalat(Dreta,Esquerra,L2),
+    validar_intercalat(L,L2),!.
 a_intercalar(L,L2,pas_separar_esq(Parells,Senars)) :- 
-    pas_a_intercalar_par_sen(L,pas_separar(Parells,Senars)),
-    L2 = L,!.
+    append_a_intercalat(Parells,Senars,L),
+    append_a_intercalat(Parells,Senars,L2),
+    validar_intercalat(L,L2),!.
 a_intercalar(L,L2,pas_separar_dre(Parells,Senars)) :- 
-    pas_a_intercalar_par_sen(L,pas_separar(Parells,Senars)),
-    L2 = L,!.
+    append_a_intercalat(Parells,Senars,L),
+    append_a_intercalat(Senars,Parells,L2),
+    validar_intercalat(L,L2),!.
 
 %ordenacio_minima(+L,+Accions,?L2,?Pas,−LlistaPassos) ==> L2 es la llista L ordenada.
 %               S'ha ordenat amb una sequencia d'aplicacions de les accions dins de la llista Accions, que pot ser qualsevol subconjunt de {a_inserir, a_capgirar, a_intercalar}. El nombre de passos de la sequencia es el minim possible.
@@ -310,28 +318,32 @@ escriure_pas(pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
 escriure_pas(pas_unir_esq(Esquerra, Dreta)) :-
     print('('), print(Esquerra), print(') + ('), print(Dreta),
     print(') == Unir Esquerra ==> ('),
-    intercalar_esquerra(Esquerra, Dreta, L2),
+    a_intercalar([_],L2,pas_unir_esq(Esquerra, Dreta)),
+    %pas_intercalar(Esquerra, Dreta, L2),
     print(L2),
     print(')'), nl.
 % Cas: Unir Dreta
 escriure_pas(pas_unir_dre(Esquerra, Dreta)) :-
     print('('), print(Esquerra), print(') + ('), print(Dreta),
     print(') == Unir Dreta ==> ('),
-    intercalar_dreta(Esquerra, Dreta, L2),
+    a_intercalar([_],L2,pas_unir_dre(Esquerra, Dreta)),
+    %intercalar_dreta(Esquerra, Dreta, L2),
     print(L2),
     print(')'), nl.
 % Cas: Separar Esquerra
 escriure_pas(pas_separar_esq(Parells, Senars)) :-
     print('('), print(Parells), print(') + ('), print(Senars),
     print(') == Separar Esquerra ==> ('),
-    append(Parells, Senars, L2),
+    a_intercalar([_],L2,pas_separar_esq(Parells, Senars)),
+    %append(Parells, Senars, L2),
     print(L2),
     print(')'), nl.
 % Cas: Separar Dreta
 escriure_pas(pas_separar_dre(Senars, Parells)) :-
     print('('), print(Senars), print(') + ('), print(Parells),
     print(') == Separar Dreta ==> ('),
-    append(Senars, Parells, L2),
+    a_intercalar([_],L2,pas_separar_dre(Parells, Senars)),
+    %append(Senars, Parells, L2),
     print(L2),
     print(')'), nl.
 escriure_pas(_).
