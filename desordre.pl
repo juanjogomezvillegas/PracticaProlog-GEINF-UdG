@@ -253,8 +253,8 @@ ordenacio_minima_rec(L, _, PassosActuals, PasActual, L, PasActual, PassosActuals
     ordenada(L, c), % Si la llista està ordenada, retornem la solució.
     !.
 ordenacio_minima_rec(L, Accions, PassosActuals, PasActual, L2, Pas, LlistaPassos) :-
-    ordenacio_minima_i(L, Accions, PassosActuals, PasActual, LIntermedia, PasIntermedi, PassosIntermedis),
-    ordenacio_minima_rec(LIntermedia, Accions, PassosIntermedis, PasIntermedi, L2, Pas, LlistaPassos).
+    ordenacio_minima_i(L, Accions, PassosActuals, PasActual, LIntermitja, PasIntermedi, PassosIntermedis),
+    ordenacio_minima_rec(LIntermitja, Accions, PassosIntermedis, PasIntermedi, L2, Pas, LlistaPassos).
 
 % ordenacio_minima_i(+L, +Accions, +PassosActuals, +PasActual, ?L2, ?Pas, -LlistaPassos) ==>
 % L és la llista d'entrada,
@@ -266,14 +266,14 @@ ordenacio_minima_rec(L, Accions, PassosActuals, PasActual, L2, Pas, LlistaPassos
 % LlistaPassos és la llista de passos aplicats.
 ordenacio_minima_i(L, [], PassosActuals, PasActual, L, PasActual, PassosActuals).
 ordenacio_minima_i(L, [Accio|RestAccions], PassosActuals, PasActual, L2, Pas, PassosActuals) :-
-    call(Accio, L, LIntermedia, _), % Apliquem l'acció a la llista
-    member((LIntermedia, _), PassosActuals),
-    ordenacio_minima_i(LIntermedia, RestAccions, PassosActuals, PasActual, L2, Pas, PassosActuals). % Continuem amb la llista intermitja
+    call(Accio, L, LIntermitja, _), % Apliquem l'acció a la llista
+    member((LIntermitja, _), PassosActuals),
+    ordenacio_minima_i(LIntermitja, RestAccions, PassosActuals, PasActual, L2, Pas, PassosActuals). % Continuem amb la llista intermitja
 ordenacio_minima_i(L, [Accio|RestAccions], PassosActuals, PasActual, L2, Pas, LlistaPassos) :-
-    call(Accio, L, LIntermedia, PasAccio), % Apliquem l'acció a la llista
+    call(Accio, L, LIntermitja, PasAccio), % Apliquem l'acció a la llista
     PasSeguent is PasActual + 1,
     append(PassosActuals, [PasAccio], NousPassos), % Afegim el nou pas al final de la llista, per tenir la llista de passos en ordre
-    ordenacio_minima_i(LIntermedia, RestAccions, NousPassos, PasSeguent, L2, Pas, LlistaPassos). % Continuem amb la llista intermitja
+    ordenacio_minima_i(LIntermitja, RestAccions, NousPassos, PasSeguent, L2, Pas, LlistaPassos). % Continuem amb la llista intermitja
 
 %millor_resultat(+Solucions, ?MillorSolucio) ==> Donat una llista de solucions, retorna la millor solució segons el número de passos
 % Solucio és una llista composada per L2 (la llista ordenada), Pas (el nombre de passos aplicats) i Passos (la llista de passos aplicats)
