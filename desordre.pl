@@ -153,10 +153,9 @@ a_inserir(L, L2, pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
     % Construim la tupla pas_inserir (Separem les llistes d'esquerra a dreta Prefix1, Prefix2, Fragment i Sufix)
     append(Prefix1, Resta1, L),
     append(Prefix2, Resta2, Resta1),
+	Prefix2 \= [],
     append(Fragment, Sufix, Resta2),
-    % Precondicions
-    Prefix2 \= [],
-    Fragment \= [],
+	Fragment \= [],
     ordenada(Fragment,c),
     validar_fragment(ultimElem,Prefix1,primerElem,Fragment,le),
     validar_fragment(primerElem,Prefix2,ultimElem,Fragment,ge),
