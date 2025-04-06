@@ -16,16 +16,16 @@ El codi de la pràctica funciona amb [GNU Prolog 1.5.0](http://www.gprolog.org/)
 
 - Opció **pas**.
 
-    - inserir, *exercici 3*. Funciona correctament amb els exemples de l'enunciat i amb les sortides d'exemples.
+    - inserir, *exercici 3*. Funciona correctament amb els exemples de l'enunciat, i a les opcions pas i pase.
 
-    - capgirar, *exercici 4*. No funciona de forma correcta, alguns exemples són diferents, i a l'opció pas provoca un stackoverflow.
+    - capgirar, *exercici 4*. No funciona de forma correcta, alguns exemples són diferents, i a les opcions pas i pase provoca un stackoverflow.
 
-    - intercalar, *exercici 5*. Funciona correctament amb els exemples de l'enunciat, però la opció pas i pase no la reconeixen.
+    - intercalar, *exercici 5*. Funciona correctament amb els exemples de l'enunciat, però la opció pas i pase no la reconeixen i mostren *Opcio incorrecte*.
 
-    - càlcul mètrica pas, *exercici 6*. Funciona correctament amb a_inserir, a_capgirar i a_intercalar tenen problemes.
+    - càlcul mètrica pas, *exercici 6*. Funciona correctament, fa servir el predicat **ordenacio_minima**, i altres de més petits per evitar repetir codi innecessàriament.
 
 - Opció **pase**.
 
-    - escriptura de passos, *exercici 7*. Funciona correctament amb a_inserir, a_capgirar i a_intercalar tenen problemes.
+    - escriptura de passos, *exercici 7*. Funciona correctament, i la sortida és la dels exemples, excepte per algun salt de línia.
 
 - Menú d'opcions i programa principal, *exercici 8*. Funciona correctament i la sortida és exactament la dels exemples, excepte per algun salt de línia.
