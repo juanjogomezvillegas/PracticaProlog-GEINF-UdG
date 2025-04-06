@@ -54,29 +54,28 @@ generar_llista(L) :-
 preguntar_accio(Res) :-
     accions_disp(X),
     write('Entra llista accions: '),nl,
-    read(Accions),
-    member(Accio, Accions),
+    read(Accions),% llegeix la llista d'accions
+    member(Accio, Accions), % i per cada accio de la llista, valida que estiguin entre les accions disponibles
     member(Accio, X),
     Res = Accions.
 
 %escriure_llista_intercalada(+L,+Intercalats) ==> Intercalats és la llista d'elements que s'escriuran entre parèntesis
-escriure_llista_intercalada([], _).
-escriure_llista_intercalada([X], Intercalats) :-
+escriure_llista_intercalada([],_).
+escriure_llista_intercalada([X],_) :- write(X).
+escriure_llista_intercalada([X],Intercalats) :-
     member(X, Intercalats),
     format('(%d)',[X]).
-escriure_llista_intercalada([X|L], Intercalats) :-
+escriure_llista_intercalada([X|L],Intercalats) :-
     member(X, Intercalats), !,
     format('(%d),',[X]),
-    escriure_llista_intercalada(L, Intercalats).
-escriure_llista_intercalada([X|L], Intercalats) :-
-    format('%d,',[X]), escriure_llista_intercalada(L, Intercalats).
-escriure_llista_intercalada([X],_) :-
-    write(X).
+    escriure_llista_intercalada(L,Intercalats).
+escriure_llista_intercalada([X|L],Intercalats) :-
+    format('%d,',[X]),escriure_llista_intercalada(L,Intercalats).
 
 %escriure_llista(+L) ==> L és la llista que s'escriurà per pantalla
 escriure_llista([]).
 escriure_llista([X]) :- write(X).
-escriure_llista([X|L]) :- format('%d,',[X]), escriure_llista(L).
+escriure_llista([X|L]) :- format('%d,',[X]),escriure_llista(L).
 
 %es_parell(+N) ==> valida si N és parell
 es_parell(N) :- N mod 2 =:= 0.
@@ -151,15 +150,13 @@ suma_desplacaments(L,Sum) :- suma_desplacaments_i(L,0,0,Sum).
 %validar_fragment(0elem1,+LL,0elem2,+Fragment,+[le|ge]) ==> Obté l'element elem1 de LL, i l'element elem2 de Fragment, i els compara com: le menor o igual, i ge major o igual
 validar_fragment(_,[],_,_,_).
 validar_fragment(Elem1,LL,Elem2,Fragment,le) :- 
-    Fragment \= [],
     call(Elem1,LL,X1),
     call(Elem2,Fragment,X2),
-    X1 =< X2.
+    X1 < X2.
 validar_fragment(Elem1,LL,Elem2,Fragment,ge) :- 
-    Fragment \= [],
     call(Elem1,LL,X1),
     call(Elem2,Fragment,X2),
-    X1 >= X2.
+    X1 > X2.
 
 %a_inserir(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar l'accio inserir a L, i Pas conte la tupla pas_inserir(Prefix1,Prefix2,Fragment,Sufix)
 a_inserir([],[],_).
@@ -178,79 +175,77 @@ a_inserir(L, L2, pas_inserir(Prefix1, Prefix2, Fragment, Sufix)) :-
     % Construeix la llista resultant L2
     append_a_essim([Prefix1, Fragment, Prefix2, Sufix], L2).
 
-%pas_a_capgirar(?L,Pas) ==> L es la llista a dividir, i Pas es la tupla a construir
-pas_a_capgirar(L,pas_capgirar(Prefix,Fragment,Sufix)) :-
+%pas_a_capgirar(Pas,?L,+Tord) ==> L es la llista a ordenar, Pas es la tupla pas_capgirar, Tord és el tipus d'ordenació del Fragment (c creixent i d decreixent)
+pas_a_capgirar(pas_capgirar(Prefix,Fragment,Sufix),L,Tord) :-
+    ordenada(Fragment,Tord),
+    capgira(Fragment,Fragment2),
+    append_a_essim([Prefix,Fragment2,Sufix],L).
+
+%a_capgirar_esquerra(L,L2,Pas,Op,Tord) ==> L i L2 són llistes, Pas és la tupla pas_capgirar, Op és un operador (ge > o le <), Tord és el tipus d'ordenació (c creixent i d decreixent)
+a_capgirar_esquerra(L,L2,pas_capgirar(Prefix,Fragment,Sufix),Op,Tord) :- 
     append(Prefix,Resta1,L),
-    append(Fragment,Sufix,Resta1).
+    Prefix\=[],
+    append(Fragment,Sufix,Resta1),
+    Fragment\=[],
+    validar_fragment(ultimElem,Prefix,ultimElem,Fragment,Op),
+    pas_a_capgirar(pas_capgirar(Prefix,Fragment,Sufix),L2,Tord).
+%a_capgirar_dreta(L,L2,Pas,Op,Tord) ==> el mateix que a_capgirar_esquerra, amb la diferencia de que valida el Sufix i no el Prefix
+a_capgirar_dreta(L,L2,pas_capgirar(Prefix,Fragment,Sufix),Op,Tord) :- 
+    append(Resta1,Sufix,L),
+    Sufix\=[],
+    append(Prefix,Fragment,Resta1),
+    Fragment\=[],
+    validar_fragment(primerElem,Sufix,primerElem,Fragment,Op),
+    pas_a_capgirar(pas_capgirar(Prefix,Fragment,Sufix),L2,Tord).
 
 %a_capgirar(+L,?L2,Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions de capgirar a L, i Pas conte la tupla pas_capgirar(Prefix,Fragment,Sufix)
 a_capgirar([],[],_).
 a_capgirar(L,L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira tot
-    pas_a_capgirar(L,pas_capgirar(Prefix,Fragment,Sufix)),
+    append(Prefix,Resta1,L),
     Prefix=[],
+    append(Fragment,Sufix,Resta1),
     Sufix=[],
-    ordenada(Fragment,d),
-    capgira(Fragment,Fragment2),
-    L2=Fragment2,!.
+    Fragment\=[],
+    pas_a_capgirar(pas_capgirar([],Fragment,[]),L2,d).
 a_capgirar(L,L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira creix esquerra
-    pas_a_capgirar(L,pas_capgirar(Prefix,Fragment,Sufix)),
-    Prefix\=[],
-    ordenada(Fragment,c),
-    validar_fragment(ultimElem,Prefix,ultimElem,Fragment,ge),
-    capgira(Fragment,Fragment2),
-    append_a_essim([Prefix,Fragment2,Sufix],L2).
+    a_capgirar_esquerra(L,L2,pas_capgirar(Prefix,Fragment,Sufix),ge,c).
 a_capgirar(L,L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira creix dreta
-    pas_a_capgirar(L,pas_capgirar(Prefix,Fragment,Sufix)),
-    Sufix\=[],
-    ordenada(Fragment,c),
-    validar_fragment(primerElem,Sufix,primerElem,Fragment,le),
-    capgira(Fragment,Fragment2),
-    append_a_essim([Prefix,Fragment2,Sufix],L2).
+    a_capgirar_dreta(L,L2,pas_capgirar(Prefix,Fragment,Sufix),le,c).
 a_capgirar(L,L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix esquerra
-    pas_a_capgirar(L,pas_capgirar(Prefix,Fragment,Sufix)),
-    Prefix\=[],
-    ordenada(Fragment,d),
-    validar_fragment(ultimElem,Prefix,ultimElem,Fragment,le),
-    capgira(Fragment,Fragment2),
-    append_a_essim([Prefix,Fragment2,Sufix],L2).
+    a_capgirar_esquerra(L,L2,pas_capgirar(Prefix,Fragment,Sufix),le,d).
 a_capgirar(L,L2,pas_capgirar(Prefix,Fragment,Sufix)) :- % capgira decreix dreta
-    pas_a_capgirar(L,pas_capgirar(Prefix,Fragment,Sufix)),
-    Sufix\=[],
-    ordenada(Fragment,d),
-    validar_fragment(primerElem,Sufix,primerElem,Fragment,ge),
-    capgira(Fragment,Fragment2),
-    append_a_essim([Prefix,Fragment2,Sufix],L2).
+    a_capgirar_dreta(L,L2,pas_capgirar(Prefix,Fragment,Sufix),ge,d).
 
 %validar_intercalat(+Lori,+Lres) ==> compara el valor de la metrica sum amb les dues llistes Lori (llista original) i Lres (llista resultant)
 validar_intercalat(Lori,Lres) :- 
     suma_desplacaments(Lori,Sori),
     suma_desplacaments(Lres,Sres),
-    Sres<Sori,!.
+    Sres < Sori.
 
-%pas_a_intercalar_div(+L,?Pas) ==> Divideix L entre Esquerra i Dreta
-pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)) :- 
-    append(Esquerra,Dreta,L),
-    Esquerra \= [],
-    Dreta \= [].
+%pas_a_intercalar_div(+L,?Part1,?Part2) ==> Divideix L entre Part1 i Part2
+pas_a_intercalar_div(L,Part1,Part2) :- 
+    append(Part1,Part2,L),
+    Part1 \= [],
+    Part2 \= [].
 
 %a_intercalar(+L,?L2,?Pas) ==> L2 es el resultat d'aplicar alguna de les subaccions d'intercalar a L, i Pas conte la tupla que representa l’accio aplicada
 a_intercalar([],[],_).
-a_intercalar(L,L2,pas_unir_esq(Esquerra,Dreta)) :- 
-    pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)),
+a_intercalar(L,L2,pas_unir_esq(Esquerra,Dreta)) :- % Unir esquerra
+    pas_a_intercalar_div(L,Esquerra,Dreta),
     append_a_intercalat(Esquerra,Dreta,L2),
-    validar_intercalat(L,L2),!.
-a_intercalar(L,L2,pas_unir_dre(Esquerra,Dreta)) :- 
-    pas_a_intercalar_div(L,pas_unir(Esquerra,Dreta)),
+    validar_intercalat(L,L2).
+a_intercalar(L,L2,pas_unir_dre(Esquerra,Dreta)) :- % Unir dreta
+    pas_a_intercalar_div(L,Esquerra,Dreta),
     append_a_intercalat(Dreta,Esquerra,L2),
-    validar_intercalat(L,L2),!.
-a_intercalar(L,L2,pas_separar_esq(Parells,Senars)) :- 
+    validar_intercalat(L,L2).
+a_intercalar(L,L2,pas_separar_esq(Parells,Senars)) :- % Separar esquerra
     append_a_intercalat(Parells,Senars,L),
-    append_a_intercalat(Parells,Senars,L2),
-    validar_intercalat(L,L2),!.
-a_intercalar(L,L2,pas_separar_dre(Parells,Senars)) :- 
+    append(Parells,Senars,L2),
+    validar_intercalat(L,L2).
+a_intercalar(L,L2,pas_separar_dre(Parells,Senars)) :- % Separar dreta
     append_a_intercalat(Parells,Senars,L),
-    append_a_intercalat(Senars,Parells,L2),
-    validar_intercalat(L,L2),!.
+    append(Senars,Parells,L2),
+    validar_intercalat(L,L2).
 
 %seleccionar_millor(+Solucions, ?MillorSolucio) ==> Donat una llista de solucions, retorna la millor solució segons el número de passos
 seleccionar_millor([Solucio], Solucio). % Cas base: només hi ha una solució
@@ -269,9 +264,8 @@ ordenacio_minima([], _, [], 0, []). % Cas base: llista buida.
 ordenacio_minima([X], _, [X], 0, []). % Cas base: llista d'un sol element.
 ordenacio_minima(L, Accions, L2, Pas, LlistaPassos) :-
     findall([L2Temp, PasTemp, LlistaPassosTemp],
-            ordenacio_minima_rec(L, Accions, [], 0, L2Temp, PasTemp, LlistaPassosTemp),
-            Solucions),
-    seleccionar_millor(Solucions, [L2, Pas, LlistaPassos]).
+        ordenacio_minima_rec(L, Accions, [], 0, L2Temp, PasTemp, LlistaPassosTemp),Solucions),
+        seleccionar_millor(Solucions, [L2, Pas, LlistaPassos]).
 
 %ordenacio_minima_rec(+L,+Accions, +PassosActuals, +PacActual, +MaxPassos,?L2,?Pas,−LlistaPassos) ==> Permete la ordenacio minima de la llista L, aplicant les accions disponibles a la llista d'accions Accions.
 % L és la llista d'entrada,
@@ -316,20 +310,20 @@ mostrar_passos([[Pas, _]|Resta]) :-
     escriure_pas(Pas),
     mostrar_passos(Resta).
 
-%escriure_passos(+L) ==> escriu tots els passos de la llista L
-escriure_passos([], _).
-escriure_passos(L, pas) :-
+%escriure_passos(+L,p) ==> escriu tots els passos de la llista L, i p pot ser les opcions pas o pase
+escriure_passos([],_).
+escriure_passos(L,pas) :-
     preguntar_accio(Accions),
-    ordenacio_minima(L, Accions, _, NPas, _),
+    ordenacio_minima(L,Accions,_,NPas,_),
     write('Solucio trobada amb '), write(NPas), write(' passos'), nl.
-escriure_passos(L, pase) :-
+escriure_passos(L,pase) :-
     preguntar_accio(Accions),
     write('Llista original: '),
     print(L), nl,
-    ordenacio_minima(L, Accions, L2, NPas, LlistaPassos),
+    ordenacio_minima(L,Accions,L2,NPas,LlistaPassos),
     mostrar_passos(LlistaPassos), % Mostrem els passos aplicats
-    nl, write('Llista ordenada: '), print(L2), nl,
-    write('Solucio trobada amb '), write(NPas), write(' passos'), nl.
+    nl, write('Llista ordenada: '),print(L2),nl,
+    write('Solucio trobada amb '),write(NPas),write(' passos'),nl.
 
 %escriure_pas(+Pas) ==> escriu el pas Pas, que es algun dels vistos en les accions inserir, capgirar i intercalar
 escriure_pas(pas_capgirar(Prefix, Fragment, Sufix)) :-
@@ -385,8 +379,7 @@ main2(L) :- repeat,
     write('- Sortir: sor'),nl,
 	read(Opcio),
     executarOperacio(Opcio,L),
-	Opcio=sor,
-    !.
+	Opcio=sor,!.
 
 %main1(+X,-L) ==> L és una llista generada segons el valor de X (pot ser m|a)
 main1(a) :- 
@@ -400,7 +393,6 @@ main1(_) :- write('Opcio incorrecte'),nl.
 %main ==> programa principal sense cap paràmetre
 main :- 
     write('Llista manual (m) o aleatoria (a) ? '),
-    read(Lt),
-    main1(Lt),
-    !.
+    read(Tipus_llista),
+    main1(Tipus_llista),!.
 main.

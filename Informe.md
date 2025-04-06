@@ -1,43 +1,31 @@
 # Pràctica de Prolog
 
-> Copyright (c) 2025 Juan José Gómez Villegas (u1987338), Guillem Pozo Sebastián (u1972840)
-
-## Parts implementades
-
-- El menú principal (predicat **main**) funciona correctament, i també funciona el predicat **llegir_llista** per llegir la llista amb la que treballarem, i el predicat **generar_llista** per generar de forma aleatòria la llista amb la que treballarem, *fent servir el predicat **llista_aleatoria**, donat pel professor*.
-
-- Opció **esc**. Juan José Gómez Villegas
-
-- Opció **des**, *exercici 1*. Guillem Pozo Sebastián
-
-- Opció **sum**, *exercici 2*. Juan José Gómez Villegas
-
-- Opció **pas**.
-
-    - inserir, *exercici 3*. Juan José Gómez Villegas i Guillem Pozo Sebastián
-
-    - capgirar, *exercici 4*. Juan José Gómez Villegas
-
-    - intercalar, *exercici 5*. Juan José Gómez Villegas
-
-    - càlcul mètrica pas, *exercici 6*. Guillem Pozo Sebastián
-
-- Opció **pase**. Guillem Pozo Sebastián
-
-    - escriptura de passos, *exercici 7*.
-
-- Menú d'opcions i programa principal, *exercici 8*. Juan José Gómez Villegas
+> Copyright (c) 2025 Juan José Gómez Villegas (u1987338@campus.udg.edu), Guillem Pozo Sebastián (u1972840@campus.udg.edu)
 
 ## Prolog utilitzat
 
-El codi de la pràctica funciona amb **Prolog GNU**, que és amb el que hem provat que funcioni cada opció del menú.
+El codi de la pràctica funciona amb [GNU Prolog 1.5.0](http://www.gprolog.org/), que és amb el que hem provat que funcioni cada opció del menú.
 
-## Desplegament de la pràctica
+## Parts implementades
 
-Prèviament, per executar la pràctica cal tenir instal·lat el [GNU Prolog 1.5.0](http://www.gprolog.org/)
+- Opció **esc**. Funciona correctament, la implementació fa servir el predicat **escriure_llista**, i funciona de forma recursiva.
 
-Per executar el codi de la pràctica, només cal executar el fitxer **desordre.pl**, i a la consola del Prolog executar el predicat **main**, i obtenim exactament la sortida dels fitxers d'exemple **main[N]{inout|in|out}.txt**.
+- Opció **des**, *exercici 1*. Funciona correctament, la implementació fa servir els predicats **nombre_desubicats** i **nombre_desubicats_i**.
 
-```prolog
-| ?- main.
-```
+- Opció **sum**, *exercici 2*. Funciona correctament, la implementació fa servir els predicats **suma_desplacaments** i **suma_desplacaments_i**.
+
+- Opció **pas**.
+
+    - inserir, *exercici 3*. Funciona correctament amb els exemples de l'enunciat i amb les sortides d'exemples.
+
+    - capgirar, *exercici 4*. No funciona de forma correcta, alguns exemples són diferents, i a l'opció pas provoca un stackoverflow.
+
+    - intercalar, *exercici 5*. Funciona correctament amb els exemples de l'enunciat, però la opció pas i pase no la reconeixen.
+
+    - càlcul mètrica pas, *exercici 6*. Funciona correctament amb a_inserir, a_capgirar i a_intercalar tenen problemes.
+
+- Opció **pase**.
+
+    - escriptura de passos, *exercici 7*. Funciona correctament amb a_inserir, a_capgirar i a_intercalar tenen problemes.
+
+- Menú d'opcions i programa principal, *exercici 8*. Funciona correctament i la sortida és exactament la dels exemples, excepte per algun salt de línia.
