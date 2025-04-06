@@ -59,6 +59,20 @@ preguntar_accio(Res) :-
     member(Accio, X),
     Res = Accions.
 
+%escriure_llista_intercalada(+L,+Intercalats) ==> Intercalats és la llista d'elements que s'escriuran entre parèntesis
+escriure_llista_intercalada([], _).
+escriure_llista_intercalada([X], Intercalats) :-
+    member(X, Intercalats),
+    format('(%d)',[X]).
+escriure_llista_intercalada([X|L], Intercalats) :-
+    member(X, Intercalats), !,
+    format('(%d),',[X]),
+    escriure_llista_intercalada(L, Intercalats).
+escriure_llista_intercalada([X|L], Intercalats) :-
+    format('%d,',[X]), escriure_llista_intercalada(L, Intercalats).
+escriure_llista_intercalada([X],_) :-
+    write(X).
+
 %escriure_llista(+L) ==> L és la llista que s'escriurà per pantalla
 escriure_llista([]).
 escriure_llista([X]) :- write(X).
@@ -333,36 +347,20 @@ escriure_pas(pas_inserir(Prefix1, Prefix2, Fragment, [])) :- % Evitem escriure u
     escriure_llista(Prefix1), write(',('), escriure_llista(Fragment), write('),'), escriure_llista(Prefix2), write(']'), nl.
 % Cas: Unir Esquerra
 escriure_pas(pas_unir_esq(Esquerra, Dreta)) :-
-    print('('), print(Esquerra), print(') + ('), print(Dreta),
-    print(') == Unir Esquerra ==> ('),
-    a_intercalar([_],L2,pas_unir_esq(Esquerra, Dreta)),
-    %pas_intercalar(Esquerra, Dreta, L2),
-    print(L2),
-    print(')'), nl.
-% Cas: Unir Dreta
+    write('['), write('('), escriure_llista(Esquerra), write('),'), escriure_llista(Dreta),
+    write('] == Intercalar ==> ['), append_a_intercalat(Esquerra, Dreta, L2), escriure_llista_intercalada(L2, Esquerra), write(']'), nl.
+% Cas: Intercalar Dreta
 escriure_pas(pas_unir_dre(Esquerra, Dreta)) :-
-    print('('), print(Esquerra), print(') + ('), print(Dreta),
-    print(') == Unir Dreta ==> ('),
-    a_intercalar([_],L2,pas_unir_dre(Esquerra, Dreta)),
-    %intercalar_dreta(Esquerra, Dreta, L2),
-    print(L2),
-    print(')'), nl.
+    write('['), write('('), escriure_llista(Dreta), write('),'), escriure_llista(Esquerra),
+    write('] == Intercalar ==> ['), append_a_intercalat(Dreta, Esquerra, L2), escriure_llista_intercalada(L2, Dreta), write(']'), nl.
 % Cas: Separar Esquerra
-escriure_pas(pas_separar_esq(Parells, Senars)) :-
-    print('('), print(Parells), print(') + ('), print(Senars),
-    print(') == Separar Esquerra ==> ('),
-    a_intercalar([_],L2,pas_separar_esq(Parells, Senars)),
-    %append(Parells, Senars, L2),
-    print(L2),
-    print(')'), nl.
+escriure_pas(pas_separar_esq(Esquerra, Dreta)) :-
+    write('['), write('('), escriure_llista(Esquerra), write('),'), escriure_llista(Dreta),
+    write('] == Intercalar ==> ['), append_a_intercalat(Esquerra, Dreta, L2), escriure_llista_intercalada(L2, Esquerra), write(']'), nl.
 % Cas: Separar Dreta
-escriure_pas(pas_separar_dre(Senars, Parells)) :-
-    print('('), print(Senars), print(') + ('), print(Parells),
-    print(') == Separar Dreta ==> ('),
-    a_intercalar([_],L2,pas_separar_dre(Parells, Senars)),
-    %append(Senars, Parells, L2),
-    print(L2),
-    print(')'), nl.
+escriure_pas(pas_separar_dre(Esquerra, Dreta)) :-
+    write('['), write('('), escriure_llista(Esquerra), write('),'), escriure_llista(Dreta),
+    write('] == Intercalar ==> ['), append_a_intercalat(Esquerra, Dreta , L2), escriure_llista_intercalada(L2, Dreta), write(']'), nl.
 escriure_pas(_).
 
 % PROGRAMA PRINCIPAL
