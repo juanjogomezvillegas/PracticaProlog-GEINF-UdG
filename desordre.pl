@@ -77,12 +77,6 @@ escriure_llista([]).
 escriure_llista([X]) :- write(X).
 escriure_llista([X|L]) :- format('%d,',[X]),escriure_llista(L).
 
-%es_parell(+N) ==> valida si N és parell
-es_parell(N) :- N mod 2 =:= 0.
-
-%es_senar(+N) ==> valida si N és senar
-es_senar(N) :- N mod 2 =:= 1.
-
 %capgira(?L1,?L2)
 %capgira(L1,L2) ==> L2 és la llista L1 capgirada
 capgira([],[]).
