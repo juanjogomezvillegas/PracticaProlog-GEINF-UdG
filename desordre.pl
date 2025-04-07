@@ -1,5 +1,5 @@
 % Pràctica de Prolog
-% Copyright (c) 2025 Juan José Gómez Villegas (u1987338),Guillem Pozo Sebastián (u1972840)
+% Copyright (c) 2025 Juan José Gómez Villegas (u1987338@campus.udg.edu), Guillem Pozo Sebastián (u1972840@campus.udg.edu)
 
 % CONSTANTS I VARIABLES
 
@@ -241,25 +241,24 @@ a_intercalar(L,L2,pas_separar_dre(Parells,Senars)) :- % Separar dreta
     append(Senars,Parells,L2),
     validar_intercalat(L,L2).
 
-%seleccionar_millor(+Solucions, ?MillorSolucio) ==> Donat una llista de solucions, retorna la millor solució segons el número de passos
-seleccionar_millor([Solucio], Solucio). % Cas base: només hi ha una solució
-seleccionar_millor([[_, PasActual, _]|Resta], MillorSolucio) :-
-    seleccionar_millor(Resta, [_, PasMillor, _]), % Obtenim la millor solució de la resta
-    PasActual < PasMillor, % Si la solució actual té menys passos que la millor
-    MillorSolucio = [_, PasActual, _].
-seleccionar_millor([_|Resta], MillorSolucio) :-
-    seleccionar_millor(Resta, MillorSolucio). % Si la solució actual no és millor, mantenim la millor solució anterior
-
-%ordenacio_minima(+L,+Accions,?L2,?Pas,−LlistaPassos) ==> L2 es la llista L ordenada.
-%               S'ha ordenat amb una sequencia d'aplicacions de les accions dins de la llista Accions, que pot ser qualsevol subconjunt de {a_inserir, a_capgirar, a_intercalar}. El nombre de passos de la sequencia es el minim possible.
-%               Pas es el nombre passos aplicats (metrica pas) LlistaPassos conte la llista de passos aplicats, per ordre.
-%               El predicat ordenacio minima es demostra una sola vegada
-ordenacio_minima([], _, [], 0, []). % Cas base: llista buida.
-ordenacio_minima([X], _, [X], 0, []). % Cas base: llista d'un sol element.
-ordenacio_minima(L, Accions, L2, Pas, LlistaPassos) :-
-    findall([L2Temp, PasTemp, LlistaPassosTemp],
-        ordenacio_minima_rec(L, Accions, [], 0, L2Temp, PasTemp, LlistaPassosTemp),Solucions),
-        seleccionar_millor(Solucions, [L2, Pas, LlistaPassos]).
+% ordenacio_minima_i(+L, +Accions, +PassosActuals, +PasActual, ?L2, ?Pas, -LlistaPassos) ==>
+% L és la llista d'entrada,
+% Accions és la llista d'accions disponibles
+% PassosActuals és la llista de passos aplicats fins ara
+% PasActual és el nombre de passos aplicats fins ara
+% L2 és la llista resultant
+% Pas és el nombre total de passos aplicats
+% LlistaPassos és la llista de passos aplicats.
+ordenacio_minima_i(L, [], PassosActuals, PasActual, L, PasActual, PassosActuals).
+ordenacio_minima_i(L, [Accio|_], PassosActuals, _, _, _, _) :-
+    call(Accio, L, LIntermitja, _), % Apliquem l'acció a la llista
+    member([_, LIntermitja], PassosActuals),
+    fail.
+ordenacio_minima_i(L, [Accio|RestAccions], PassosActuals, PasActual, L2, Pas, LlistaPassos) :-
+    call(Accio, L, LIntermitja, PasAccio), % Apliquem l'acció a la llista
+    PasSeguent is PasActual + 1,
+    append(PassosActuals, [[PasAccio, LIntermitja]], NousPassos), % Afegim el nou pas al final de la llista, per tenir la llista de passos en ordre
+    ordenacio_minima_i(LIntermitja, RestAccions, NousPassos, PasSeguent, L2, Pas, LlistaPassos). % Continuem amb la llista intermitja
 
 %ordenacio_minima_rec(+L,+Accions, +PassosActuals, +PacActual, +MaxPassos,?L2,?Pas,−LlistaPassos) ==> Permete la ordenacio minima de la llista L, aplicant les accions disponibles a la llista d'accions Accions.
 % L és la llista d'entrada,
@@ -279,24 +278,25 @@ ordenacio_minima_rec(L, Accions, PassosActuals, PasActual, L2, Pas, LlistaPassos
     ordenacio_minima_i(L, Accions, PassosActuals, PasActual, LIntermitja, PasIntermedi, PassosIntermedis),
     ordenacio_minima_rec(LIntermitja, Accions, PassosIntermedis, PasIntermedi, L2, Pas, LlistaPassos).
 
-% ordenacio_minima_i(+L, +Accions, +PassosActuals, +PasActual, ?L2, ?Pas, -LlistaPassos) ==>
-% L és la llista d'entrada,
-% Accions és la llista d'accions disponibles
-% PassosActuals és la llista de passos aplicats fins ara
-% PasActual és el nombre de passos aplicats fins ara
-% L2 és la llista resultant
-% Pas és el nombre total de passos aplicats
-% LlistaPassos és la llista de passos aplicats.
-ordenacio_minima_i(L, [], PassosActuals, PasActual, L, PasActual, PassosActuals).
-ordenacio_minima_i(L, [Accio|_], PassosActuals, _, _, _, _) :-
-    call(Accio, L, LIntermitja, _), % Apliquem l'acció a la llista
-    member([_, LIntermitja], PassosActuals),
-    fail.
-ordenacio_minima_i(L, [Accio|RestAccions], PassosActuals, PasActual, L2, Pas, LlistaPassos) :-
-    call(Accio, L, LIntermitja, PasAccio), % Apliquem l'acció a la llista
-    PasSeguent is PasActual + 1,
-    append(PassosActuals, [[PasAccio, LIntermitja]], NousPassos), % Afegim el nou pas al final de la llista, per tenir la llista de passos en ordre
-    ordenacio_minima_i(LIntermitja, RestAccions, NousPassos, PasSeguent, L2, Pas, LlistaPassos). % Continuem amb la llista intermitja
+%seleccionar_millor(+Solucions, ?MillorSolucio) ==> Donat una llista de solucions, retorna la millor solució segons el número de passos
+seleccionar_millor([Solucio], Solucio). % Cas base: només hi ha una solució
+seleccionar_millor([[_, PasActual, _]|Resta], MillorSolucio) :-
+    seleccionar_millor(Resta, [_, PasMillor, _]), % Obtenim la millor solució de la resta
+    PasActual < PasMillor, % Si la solució actual té menys passos que la millor
+    MillorSolucio = [_, PasActual, _].
+seleccionar_millor([_|Resta], MillorSolucio) :-
+    seleccionar_millor(Resta, MillorSolucio). % Si la solució actual no és millor, mantenim la millor solució anterior
+
+%ordenacio_minima(+L,+Accions,?L2,?Pas,−LlistaPassos) ==> L2 es la llista L ordenada.
+%               S'ha ordenat amb una sequencia d'aplicacions de les accions dins de la llista Accions, que pot ser qualsevol subconjunt de {a_inserir, a_capgirar, a_intercalar}. El nombre de passos de la sequencia es el minim possible.
+%               Pas es el nombre passos aplicats (metrica pas) LlistaPassos conte la llista de passos aplicats, per ordre.
+%               El predicat ordenacio minima es demostra una sola vegada
+ordenacio_minima([], _, [], 0, []). % Cas base: llista buida.
+ordenacio_minima([X], _, [X], 0, []). % Cas base: llista d'un sol element.
+ordenacio_minima(L, Accions, L2, Pas, LlistaPassos) :-
+    findall([L2Temp, PasTemp, LlistaPassosTemp],
+        ordenacio_minima_rec(L, Accions, [], 0, L2Temp, PasTemp, LlistaPassosTemp),Solucions),
+        seleccionar_millor(Solucions, [L2, Pas, LlistaPassos]).
 
 %mostrar_passos(+Passos) ==> Predicat recursiu per mostrar tots els passos aplicats
 mostrar_passos([]).
